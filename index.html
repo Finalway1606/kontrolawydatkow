@@ -2,112 +2,102 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Budżet Domowy</title>
   <style>
-    /* Reset niepotrzebnych marginesów i paddingów */
-    * {
-      box-sizing: border-box;
-    }
-    
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #1e1e1e; /* ciemne tło */
-      color: #d4af37; /* złoty kolor tekstu */
-      padding: 1rem;
-      max-width: 900px;
-      margin: auto;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    
-    h1, h2, h3 {
-      text-align: center;
+      background: #1e1e1e;
       color: #d4af37;
-      margin: 0.3rem 0 1rem;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
-
     section {
-      background: #2b2b2b;
-      padding: 1rem 1.5rem;
+      background: #2c2c2c;
+      padding: 1rem 2rem;
+      margin-bottom: 2rem;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+      box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+      border: 1px solid #d4af37;
     }
-
+    h1, h2 {
+      text-align: center;
+      color: #ffd966;
+      margin-bottom: 0.5rem;
+    }
     label {
       display: block;
       margin-top: 1rem;
-      color: #e3c875;
       font-weight: 600;
+      color: #ffd966;
     }
-
     input, select {
       width: 100%;
-      padding: 0.5rem;
+      padding: 0.6rem;
       margin-top: 0.3rem;
-      border: 1px solid #d4af37;
       border-radius: 6px;
-      background: #1e1e1e;
-      color: #d4af37;
-      font-weight: 600;
+      border: 1px solid #d4af37;
+      background: #3b3b3b;
+      color: #ffd966;
       font-size: 1rem;
-      transition: border-color 0.3s;
+      transition: border-color 0.3s ease;
     }
-
-    input::placeholder {
-      color: #a68a3c;
-    }
-
     input:focus, select:focus {
       outline: none;
-      border-color: #f5d061;
-      box-shadow: 0 0 5px #f5d061;
+      border-color: #ffd966;
+      background: #444;
+      color: #fff;
     }
-
     button {
-      margin-top: 1.5rem;
-      padding: 0.7rem 1.2rem;
-      background: linear-gradient(45deg, #b08d1e, #d4af37);
+      margin-top: 1.2rem;
+      padding: 0.6rem 1.2rem;
+      background: #d4af37;
       color: #1e1e1e;
-      font-weight: 700;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: background 0.3s;
-      display: inline-block;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+      display: block;
       width: 100%;
-      max-width: 300px;
+      max-width: 240px;
+      margin-left: auto;
+      margin-right: auto;
     }
-
     button:hover {
-      background: linear-gradient(45deg, #d4af37, #b08d1e);
+      background: #ffd966;
+      color: #1a1a1a;
     }
-
     .result {
       font-size: 1.1rem;
       font-weight: bold;
       white-space: pre-wrap;
-      color: #f0e6b8;
-      text-align: center;
+      color: #fff3b0;
+      background: #3b3b3b;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #d4af37;
+      margin-top: 1rem;
     }
-
     ul {
-      padding-left: 1.2rem;
-      color: #f0e6b8;
-    }
-
-    ul li {
-      margin-bottom: 0.3rem;
-      font-weight: 600;
+      padding-left: 1.5rem;
+      color: #f0d77a;
+      max-height: 150px;
+      overflow-y: auto;
+      margin-top: 0.5rem;
+      border: 1px solid #d4af37;
+      border-radius: 8px;
+      background: #3b3b3b;
     }
 
     /* Responsywność */
-
-    @media (max-width: 600px) {
+    @media (max-width: 480px) {
       body {
-        padding: 1rem 0.8rem;
-        max-width: 100%;
+        padding: 1rem;
       }
       section {
         padding: 1rem;
@@ -115,6 +105,21 @@
       }
       button {
         max-width: 100%;
+      }
+      input, select {
+        font-size: 1.1rem;
+      }
+      label {
+        font-size: 1rem;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+      }
+      .result {
+        font-size: 1rem;
       }
     }
   </style>
@@ -124,67 +129,67 @@
 
   <section>
     <h2>Wpływy</h2>
-    <label>Pensja:</label>
+    <label for="salaryInput">Pensja:</label>
     <input type="number" id="salaryInput" />
 
-    <label>800+:</label>
+    <label for="childInput">800+:</label>
     <input type="number" id="childInput" />
   </section>
 
   <section>
     <h2>Wydatki stałe</h2>
-    <label>Rata kredytu:</label>
+    <label for="creditInput">Rata kredytu:</label>
     <input type="number" id="creditInput" />
 
-    <label>Internet:</label>
+    <label for="internetInput">Internet:</label>
     <input type="number" id="internetInput" />
 
-    <label>Telefony:</label>
+    <label for="phoneInput">Telefony:</label>
     <input type="number" id="phoneInput" />
 
-    <label>Kieszonkowe:</label>
+    <label for="allowanceInput">Kieszonkowe:</label>
     <input type="number" id="allowanceInput" />
 
-    <label>Czynsz:</label>
+    <label for="rentInput">Czynsz:</label>
     <input type="number" id="rentInput" />
 
-    <label>Prąd:</label>
+    <label for="electricityInput">Prąd:</label>
     <input type="number" id="electricityInput" />
 
-    <label>ZUS:</label>
+    <label for="zusInput">ZUS:</label>
     <input type="number" id="zusInput" />
 
-    <label>Księgowa:</label>
+    <label for="accountantInput">Księgowa:</label>
     <input type="number" id="accountantInput" />
 
-    <label>Eagon:</label>
+    <label for="eagonInput">Eagon:</label>
     <input type="number" id="eagonInput" />
 
-    <label>Przedszkole:</label>
+    <label for="kindergartenInput">Przedszkole:</label>
     <input type="number" id="kindergartenInput" />
 
-    <label>Wydatki już poniesione (np. zakupy):</label>
+    <label for="spentAlreadyInput">Wydatki już poniesione (np. zakupy):</label>
     <input type="number" id="spentAlreadyInput" />
   </section>
 
   <section>
     <h2>Subskrypcje</h2>
-    <label>Netflix (miesięcznie):</label>
+    <label for="netflixInput">Netflix (miesięcznie):</label>
     <input type="number" id="netflixInput" />
 
-    <label>Prime (miesięcznie):</label>
+    <label for="primeInput">Prime (miesięcznie):</label>
     <input type="number" id="primeInput" />
 
-    <label>Disney+ (rocznie):</label>
+    <label for="disneyInput">Disney+ (rocznie):</label>
     <input type="number" id="disneyInput" />
 
-    <label>Xbox (miesięcznie):</label>
+    <label for="xboxInput">Xbox (miesięcznie):</label>
     <input type="number" id="xboxInput" />
   </section>
 
   <section>
     <h2>Wydatki ad hoc, uzupełniane po każdym zakupie</h2>
-    <label>Kategoria:</label>
+    <label for="expenseCategory">Kategoria:</label>
     <select id="expenseCategory" onchange="categoryChanged()">
       <option value="">-- Wybierz kategorię --</option>
       <option value="spozywka">Spożywka</option>
@@ -192,16 +197,16 @@
       <option value="przyjemnosci">Przyjemności</option>
     </select>
 
-    <label id="subcategoryLabel" style="display:none; margin-top: 1rem;">Podkategoria:</label>
+    <label id="subcategoryLabel" style="display:none; margin-top: 1rem;" for="expenseSubcategory">Podkategoria:</label>
     <select id="expenseSubcategory" style="display:none;">
       <option value="">-- Wybierz podkategorię --</option>
       <option value="zabka">Żabka</option>
       <option value="auchan">Auchan</option>
     </select>
 
-    <label>Opis wydatku:</label>
+    <label for="expenseDesc">Opis wydatku:</label>
     <input type="text" id="expenseDesc" />
-    <label>Kwota wydatku:</label>
+    <label for="expenseAmount">Kwota wydatku:</label>
     <input type="number" id="expenseAmount" />
     <button onclick="addExpense()">➕ Dodaj wydatek</button>
   </section>
@@ -290,139 +295,94 @@
       document.getElementById('disneyInput').value = data.subscriptions?.disney || 0;
       document.getElementById('xboxInput').value = data.subscriptions?.xbox || 0;
 
-      updateExpensesList();
+      updateExpenseList();
     }
 
-    function gatherFormData() {
-      data.incomeSources.salary = Number(document.getElementById('salaryInput').value) || 0;
-      data.incomeSources.childSupport = Number(document.getElementById('childInput').value) || 0;
-
-      data.fixedExpenses.credit = Number(document.getElementById('creditInput').value) || 0;
-      data.fixedExpenses.internet = Number(document.getElementById('internetInput').value) || 0;
-      data.fixedExpenses.phone = Number(document.getElementById('phoneInput').value) || 0;
-      data.fixedExpenses.allowance = Number(document.getElementById('allowanceInput').value) || 0;
-      data.fixedExpenses.rent = Number(document.getElementById('rentInput').value) || 0;
-      data.fixedExpenses.electricity = Number(document.getElementById('electricityInput').value) || 0;
-      data.fixedExpenses.zus = Number(document.getElementById('zusInput').value) || 0;
-      data.fixedExpenses.accountant = Number(document.getElementById('accountantInput').value) || 0;
-      data.fixedExpenses.eagon = Number(document.getElementById('eagonInput').value) || 0;
-      data.fixedExpenses.kindergarten = Number(document.getElementById('kindergartenInput').value) || 0;
-
-      data.spentAlready = Number(document.getElementById('spentAlreadyInput').value) || 0;
-
-      data.subscriptions.netflix = Number(document.getElementById('netflixInput').value) || 0;
-      data.subscriptions.prime = Number(document.getElementById('primeInput').value) || 0;
-      data.subscriptions.disney = Number(document.getElementById('disneyInput').value) || 0;
-      data.subscriptions.xbox = Number(document.getElementById('xboxInput').value) || 0;
-    }
-
-    function calculateSummary() {
-      const incomeTotal = data.incomeSources.salary + data.incomeSources.childSupport;
-      const fixedExpensesTotal = Object.values(data.fixedExpenses).reduce((a,b) => a+b, 0);
-      // Subscriptions - Netflix, Prime, Xbox miesięcznie, Disney rocznie (podzielimy na miesiące)
-      const subsTotal = (data.subscriptions.netflix + data.subscriptions.prime + data.subscriptions.xbox) + (data.subscriptions.disney / 12);
-      // Suma wydatków ad hoc
-      const adhocTotal = data.expenses.reduce((sum, e) => sum + e.amount, 0);
-      // Łączne wydatki
-      const totalExpenses = fixedExpensesTotal + subsTotal + adhocTotal + data.spentAlready;
-
-      const balance = incomeTotal - totalExpenses;
-
-      return {
-        incomeTotal,
-        fixedExpensesTotal,
-        subsTotal,
-        adhocTotal,
-        spentAlready: data.spentAlready,
-        totalExpenses,
-        balance
-      };
+    function updateExpenseList() {
+      const ul = document.getElementById('expenseList');
+      ul.innerHTML = '';
+      (data.expenses || []).forEach(e => {
+        let displayText = e.desc + ': ' + e.amount.toFixed(2) + ' zł';
+        if(e.category) displayText += ` [${e.category}${e.subcategory ? ' > ' + e.subcategory : ''}]`;
+        const li = document.createElement('li');
+        li.textContent = displayText;
+        ul.appendChild(li);
+      });
     }
 
     function updateSummary() {
-      gatherFormData();
-      const summary = calculateSummary();
+      const income = (data.incomeSources?.salary || 0) + (data.incomeSources?.childSupport || 0);
+      const fixed = Object.values(data.fixedExpenses || {}).reduce((a, b) => a + b, 0);
 
-      const summaryText = 
-        `Wpływy: ${summary.incomeTotal.toFixed(2)} zł\n` +
-        `Stałe wydatki: ${summary.fixedExpensesTotal.toFixed(2)} zł\n` +
-        `Subskrypcje (miesięcznie): ${summary.subsTotal.toFixed(2)} zł\n` +
-        `Wydatki ad hoc: ${summary.adhocTotal.toFixed(2)} zł\n` +
-        `Wydatki już poniesione: ${summary.spentAlready.toFixed(2)} zł\n` +
-        `-----------------------------\n` +
-        `Razem wydatki: ${summary.totalExpenses.toFixed(2)} zł\n` +
-        `Bilans: ${summary.balance.toFixed(2)} zł`;
+      const subsMonthly = 
+        (data.subscriptions?.netflix || 0) +
+        (data.subscriptions?.prime || 0) +
+        ((data.subscriptions?.disney || 0) / 12) +
+        (data.subscriptions?.xbox || 0);
 
-      document.getElementById('summaryText').textContent = summaryText;
-    }
+      const adHocExpenses = (data.expenses || []).reduce((sum, e) => sum + e.amount, 0);
+      const totalSpent = fixed + subsMonthly + (data.spentAlready || 0) + adHocExpenses;
+      const savings = 1000;
 
-    function updateExpensesList() {
-      const ul = document.getElementById('expenseList');
-      ul.innerHTML = '';
-      data.expenses.forEach((e, i) => {
-        const li = document.createElement('li');
-        li.textContent = `[${e.category}${e.subcategory ? " > "+e.subcategory : ""}] ${e.description} - ${e.amount.toFixed(2)} zł`;
-        // Dodaj możliwość usunięcia pojedynczego wydatku:
-        const delBtn = document.createElement('button');
-        delBtn.textContent = '❌';
-        delBtn.style.marginLeft = '0.5rem';
-        delBtn.style.cursor = 'pointer';
-        delBtn.onclick = () => {
-          data.expenses.splice(i, 1);
-          updateExpensesList();
-          updateSummary();
-        };
-        li.appendChild(delBtn);
-        ul.appendChild(li);
-      });
+      const now = new Date();
+      const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+
+      const available = income - totalSpent - savings;
+      const dailyAvailable = available > 0 ? (available / daysInMonth) : 0;
+
+      const monthlyExpenses = fixed + subsMonthly + (data.spentAlready || 0) + adHocExpenses;
+
+      const text = 
+`Dochód: ${income.toFixed(2)} zł
+Stałe wydatki: ${fixed.toFixed(2)} zł
+Subskrypcje (miesięcznie przeliczone): ${subsMonthly.toFixed(2)} zł
+Wydatki już poniesione: ${(data.spentAlready || 0).toFixed(2)} zł
+Wydatki ad hoc: ${adHocExpenses.toFixed(2)} zł
+------------------------------------
+Razem wydatków: ${totalSpent.toFixed(2)} zł
+Oszczędności (zarezerwowane): ${savings.toFixed(2)} zł
+Dostępne po wydatkach: ${available.toFixed(2)} zł
+Dostępne dziennie: ${dailyAvailable.toFixed(2)} zł
+`;
+
+      document.getElementById('summaryText').textContent = text;
     }
 
     function addExpense() {
       const cat = document.getElementById('expenseCategory').value;
       if(!cat) {
-        alert("Wybierz kategorię wydatku.");
+        alert('Wybierz kategorię!');
         return;
       }
-      let subcat = "";
-      if(cat === "spozywka") {
-        subcat = document.getElementById('expenseSubcategory').value;
-        if(!subcat) {
-          alert("Wybierz podkategorię.");
-          return;
-        }
-      }
+      const subcatSelect = document.getElementById('expenseSubcategory');
+      const subcat = subcatSelect.style.display !== 'none' ? subcatSelect.value : "";
+
       const desc = document.getElementById('expenseDesc').value.trim();
       if(!desc) {
-        alert("Wpisz opis wydatku.");
+        alert('Podaj opis wydatku!');
         return;
       }
-      let amount = Number(document.getElementById('expenseAmount').value);
+
+      const amount = parseFloat(document.getElementById('expenseAmount').value);
       if(isNaN(amount) || amount <= 0) {
-        alert("Wpisz poprawną kwotę wydatku.");
+        alert('Podaj poprawną kwotę!');
         return;
       }
 
-      data.expenses.push({
-        category: cat,
-        subcategory: subcat,
-        description: desc,
-        amount
-      });
+      data.expenses.push({ category: cat, subcategory: subcat, desc: desc, amount: amount });
+      updateExpenseList();
+      updateSummary();
 
-      // Reset pól
+      // Wyczyść pola
       document.getElementById('expenseCategory').value = "";
       document.getElementById('expenseSubcategory').value = "";
-      document.getElementById('expenseSubcategory').style.display = "none";
-      document.getElementById('subcategoryLabel').style.display = "none";
+      categoryChanged();
       document.getElementById('expenseDesc').value = "";
       document.getElementById('expenseAmount').value = "";
-
-      updateExpensesList();
-      updateSummary();
     }
 
     function resetBin() {
-      if(confirm("Czy na pewno chcesz zresetować WSZYSTKIE dane? Operacja jest nieodwracalna!")) {
+      if(confirm("Czy na pewno chcesz zresetować wszystkie dane?")) {
         data = {
           incomeSources: { salary: 0, childSupport: 0 },
           fixedExpenses: {
@@ -448,31 +408,52 @@
     }
 
     async function saveData() {
-      gatherFormData();
+      // Aktualizuj dane z formularzy
+      data.incomeSources.salary = parseFloat(document.getElementById('salaryInput').value) || 0;
+      data.incomeSources.childSupport = parseFloat(document.getElementById('childInput').value) || 0;
+
+      data.fixedExpenses.credit = parseFloat(document.getElementById('creditInput').value) || 0;
+      data.fixedExpenses.internet = parseFloat(document.getElementById('internetInput').value) || 0;
+      data.fixedExpenses.phone = parseFloat(document.getElementById('phoneInput').value) || 0;
+      data.fixedExpenses.allowance = parseFloat(document.getElementById('allowanceInput').value) || 0;
+      data.fixedExpenses.rent = parseFloat(document.getElementById('rentInput').value) || 0;
+      data.fixedExpenses.electricity = parseFloat(document.getElementById('electricityInput').value) || 0;
+      data.fixedExpenses.zus = parseFloat(document.getElementById('zusInput').value) || 0;
+      data.fixedExpenses.accountant = parseFloat(document.getElementById('accountantInput').value) || 0;
+      data.fixedExpenses.eagon = parseFloat(document.getElementById('eagonInput').value) || 0;
+      data.fixedExpenses.kindergarten = parseFloat(document.getElementById('kindergartenInput').value) || 0;
+
+      data.spentAlready = parseFloat(document.getElementById('spentAlreadyInput').value) || 0;
+
+      data.subscriptions.netflix = parseFloat(document.getElementById('netflixInput').value) || 0;
+      data.subscriptions.prime = parseFloat(document.getElementById('primeInput').value) || 0;
+      data.subscriptions.disney = parseFloat(document.getElementById('disneyInput').value) || 0;
+      data.subscriptions.xbox = parseFloat(document.getElementById('xboxInput').value) || 0;
+
+      updateSummary();
+
       try {
         const res = await fetch(apiUrl, {
-          method: "PUT",
+          method: 'PUT',
           headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key": masterKey
+            'Content-Type': 'application/json',
+            'X-Master-Key': masterKey,
+            'X-Bin-Versioning': 'false'
           },
           body: JSON.stringify(data)
         });
-        if(!res.ok) throw new Error("Błąd zapisu: " + res.statusText);
-        alert("Dane zapisane pomyślnie! ✅");
-      } catch(e) {
-        alert("Błąd zapisu: " + e.message);
+        if(res.ok) {
+          alert('✅ Dane zostały zapisane.');
+        } else {
+          alert('❌ Błąd zapisu danych: ' + res.statusText);
+        }
+      } catch (e) {
+        alert('❌ Błąd sieci: ' + e.message);
       }
     }
 
-    // Aktualizuj podsumowanie przy każdej zmianie inputów
-    const inputs = document.querySelectorAll("input[type=number]");
-    inputs.forEach(inp => inp.addEventListener("input", updateSummary));
-
-    window.onload = () => {
-      loadData();
-      updateSummary();
-    };
+    // Załaduj dane przy starcie
+    loadData();
   </script>
 </body>
 </html>

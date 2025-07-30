@@ -35,16 +35,19 @@
       color: #ffd966;
     }
     input, select {
-      width: 100%;
-      padding: 0.6rem;
-      margin-top: 0.3rem;
-      border-radius: 6px;
-      border: 1px solid #d4af37;
-      background: #3b3b3b;
-      color: #ffd966;
-      font-size: 1rem;
-      transition: border-color 0.3s ease;
-    }
+  width: 100%;
+  max-width: 350px; /* maksymalna szerokość pól */
+  box-sizing: border-box; /* uwzględnia padding i border w szerokości */
+  padding: 0.5rem 0.8rem;
+  margin-top: 0.3rem;
+  border-radius: 6px;
+  border: 1px solid #d4af37;
+  background: #3b3b3b;
+  color: #ffd966;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  display: block;
+}
     input:focus, select:focus {
       outline: none;
       border-color: #ffd966;

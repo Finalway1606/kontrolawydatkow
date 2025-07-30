@@ -4,14 +4,119 @@
   <meta charset="UTF-8" />
   <title>Budżet Domowy</title>
   <style>
-    body { font-family: sans-serif; background: #f4f4f4; padding: 2rem; max-width: 800px; margin: auto; }
-    section { background: white; padding: 1rem 2rem; margin-bottom: 2rem; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    h1, h2 { text-align: center; }
-    label { display: block; margin-top: 1rem; }
-    input, select { width: 100%; padding: 0.5rem; margin-top: 0.3rem; }
-    button { margin-top: 1rem; padding: 0.5rem 1rem; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; }
-    .result { font-size: 1.1rem; font-weight: bold; white-space: pre-wrap; }
-    ul { padding-left: 1rem; }
+    /* Reset niepotrzebnych marginesów i paddingów */
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1e1e1e; /* ciemne tło */
+      color: #d4af37; /* złoty kolor tekstu */
+      padding: 1rem;
+      max-width: 900px;
+      margin: auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    h1, h2, h3 {
+      text-align: center;
+      color: #d4af37;
+      margin: 0.3rem 0 1rem;
+    }
+
+    section {
+      background: #2b2b2b;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      color: #e3c875;
+      font-weight: 600;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border: 1px solid #d4af37;
+      border-radius: 6px;
+      background: #1e1e1e;
+      color: #d4af37;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    input::placeholder {
+      color: #a68a3c;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #f5d061;
+      box-shadow: 0 0 5px #f5d061;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      padding: 0.7rem 1.2rem;
+      background: linear-gradient(45deg, #b08d1e, #d4af37);
+      color: #1e1e1e;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      display: inline-block;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    button:hover {
+      background: linear-gradient(45deg, #d4af37, #b08d1e);
+    }
+
+    .result {
+      font-size: 1.1rem;
+      font-weight: bold;
+      white-space: pre-wrap;
+      color: #f0e6b8;
+      text-align: center;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+      color: #f0e6b8;
+    }
+
+    ul li {
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+    }
+
+    /* Responsywność */
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem 0.8rem;
+        max-width: 100%;
+      }
+      section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      button {
+        max-width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -185,150 +290,139 @@
       document.getElementById('disneyInput').value = data.subscriptions?.disney || 0;
       document.getElementById('xboxInput').value = data.subscriptions?.xbox || 0;
 
-      updateExpenseList();
+      updateExpensesList();
     }
 
-    function updateExpenseList() {
+    function gatherFormData() {
+      data.incomeSources.salary = Number(document.getElementById('salaryInput').value) || 0;
+      data.incomeSources.childSupport = Number(document.getElementById('childInput').value) || 0;
+
+      data.fixedExpenses.credit = Number(document.getElementById('creditInput').value) || 0;
+      data.fixedExpenses.internet = Number(document.getElementById('internetInput').value) || 0;
+      data.fixedExpenses.phone = Number(document.getElementById('phoneInput').value) || 0;
+      data.fixedExpenses.allowance = Number(document.getElementById('allowanceInput').value) || 0;
+      data.fixedExpenses.rent = Number(document.getElementById('rentInput').value) || 0;
+      data.fixedExpenses.electricity = Number(document.getElementById('electricityInput').value) || 0;
+      data.fixedExpenses.zus = Number(document.getElementById('zusInput').value) || 0;
+      data.fixedExpenses.accountant = Number(document.getElementById('accountantInput').value) || 0;
+      data.fixedExpenses.eagon = Number(document.getElementById('eagonInput').value) || 0;
+      data.fixedExpenses.kindergarten = Number(document.getElementById('kindergartenInput').value) || 0;
+
+      data.spentAlready = Number(document.getElementById('spentAlreadyInput').value) || 0;
+
+      data.subscriptions.netflix = Number(document.getElementById('netflixInput').value) || 0;
+      data.subscriptions.prime = Number(document.getElementById('primeInput').value) || 0;
+      data.subscriptions.disney = Number(document.getElementById('disneyInput').value) || 0;
+      data.subscriptions.xbox = Number(document.getElementById('xboxInput').value) || 0;
+    }
+
+    function calculateSummary() {
+      const incomeTotal = data.incomeSources.salary + data.incomeSources.childSupport;
+      const fixedExpensesTotal = Object.values(data.fixedExpenses).reduce((a,b) => a+b, 0);
+      // Subscriptions - Netflix, Prime, Xbox miesięcznie, Disney rocznie (podzielimy na miesiące)
+      const subsTotal = (data.subscriptions.netflix + data.subscriptions.prime + data.subscriptions.xbox) + (data.subscriptions.disney / 12);
+      // Suma wydatków ad hoc
+      const adhocTotal = data.expenses.reduce((sum, e) => sum + e.amount, 0);
+      // Łączne wydatki
+      const totalExpenses = fixedExpensesTotal + subsTotal + adhocTotal + data.spentAlready;
+
+      const balance = incomeTotal - totalExpenses;
+
+      return {
+        incomeTotal,
+        fixedExpensesTotal,
+        subsTotal,
+        adhocTotal,
+        spentAlready: data.spentAlready,
+        totalExpenses,
+        balance
+      };
+    }
+
+    function updateSummary() {
+      gatherFormData();
+      const summary = calculateSummary();
+
+      const summaryText = 
+        `Wpływy: ${summary.incomeTotal.toFixed(2)} zł\n` +
+        `Stałe wydatki: ${summary.fixedExpensesTotal.toFixed(2)} zł\n` +
+        `Subskrypcje (miesięcznie): ${summary.subsTotal.toFixed(2)} zł\n` +
+        `Wydatki ad hoc: ${summary.adhocTotal.toFixed(2)} zł\n` +
+        `Wydatki już poniesione: ${summary.spentAlready.toFixed(2)} zł\n` +
+        `-----------------------------\n` +
+        `Razem wydatki: ${summary.totalExpenses.toFixed(2)} zł\n` +
+        `Bilans: ${summary.balance.toFixed(2)} zł`;
+
+      document.getElementById('summaryText').textContent = summaryText;
+    }
+
+    function updateExpensesList() {
       const ul = document.getElementById('expenseList');
       ul.innerHTML = '';
-      (data.expenses || []).forEach(e => {
-        let displayText = e.desc + ': ' + e.amount.toFixed(2) + ' zł';
-        if(e.category) displayText += ` [${e.category}${e.subcategory ? ' > ' + e.subcategory : ''}]`;
+      data.expenses.forEach((e, i) => {
         const li = document.createElement('li');
-        li.textContent = displayText;
+        li.textContent = `[${e.category}${e.subcategory ? " > "+e.subcategory : ""}] ${e.description} - ${e.amount.toFixed(2)} zł`;
+        // Dodaj możliwość usunięcia pojedynczego wydatku:
+        const delBtn = document.createElement('button');
+        delBtn.textContent = '❌';
+        delBtn.style.marginLeft = '0.5rem';
+        delBtn.style.cursor = 'pointer';
+        delBtn.onclick = () => {
+          data.expenses.splice(i, 1);
+          updateExpensesList();
+          updateSummary();
+        };
+        li.appendChild(delBtn);
         ul.appendChild(li);
       });
     }
 
-    function updateSummary() {
-      const income = (data.incomeSources?.salary || 0) + (data.incomeSources?.childSupport || 0);
-      const fixed = Object.values(data.fixedExpenses || {}).reduce((a, b) => a + b, 0);
-
-      const subsMonthly = 
-        (data.subscriptions?.netflix || 0) +
-        (data.subscriptions?.prime || 0) +
-        ((data.subscriptions?.disney || 0) / 12) +
-        (data.subscriptions?.xbox || 0);
-
-      const adHocExpenses = (data.expenses || []).reduce((sum, e) => sum + e.amount, 0);
-      const totalSpent = fixed + subsMonthly + (data.spentAlready || 0) + adHocExpenses;
-      const savings = 1000;
-
-      const now = new Date();
-      const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-
-      const available = income - totalSpent - savings;
-      const dailyAvailable = available > 0 ? (available / daysInMonth) : 0;
-
-      const monthlyExpenses = fixed + subsMonthly + (data.spentAlready || 0) + adHocExpenses;
-
-      const text = `
-Dochód: ${income.toFixed(2)} zł |
-Stałe wydatki: ${fixed.toFixed(2)} zł |
-Subskrypcje (miesięcznie): ${subsMonthly.toFixed(2)} zł |
-Wydatki już poniesione: ${data.spentAlready.toFixed(2)} zł |
-Wydatki ad hoc: ${adHocExpenses.toFixed(2)} zł
--------------------------
-Łączne miesięczne wydatki: ${monthlyExpenses.toFixed(2)} zł
-Oszczędności: ${savings.toFixed(2)} zł
-Dostępne po wydatkach i oszczędnościach: ${available.toFixed(2)} zł
-Dzienny budżet na wydatki ad hoc: ${dailyAvailable.toFixed(2)} zł
-      `;
-      document.getElementById('summaryText').textContent = text.trim();
-    }
-
     function addExpense() {
       const cat = document.getElementById('expenseCategory').value;
-      const subcat = document.getElementById('expenseSubcategory').value;
-      const desc = document.getElementById('expenseDesc').value.trim();
-      const amount = parseFloat(document.getElementById('expenseAmount').value);
-
       if(!cat) {
-        alert("Wybierz kategorię");
+        alert("Wybierz kategorię wydatku.");
         return;
       }
-      if(cat === 'spozywka' && !subcat) {
-        alert("Wybierz podkategorię dla Spożywki");
-        return;
+      let subcat = "";
+      if(cat === "spozywka") {
+        subcat = document.getElementById('expenseSubcategory').value;
+        if(!subcat) {
+          alert("Wybierz podkategorię.");
+          return;
+        }
       }
+      const desc = document.getElementById('expenseDesc').value.trim();
       if(!desc) {
-        alert("Podaj opis wydatku");
+        alert("Wpisz opis wydatku.");
         return;
       }
+      let amount = Number(document.getElementById('expenseAmount').value);
       if(isNaN(amount) || amount <= 0) {
-        alert("Podaj poprawną kwotę większą niż 0");
+        alert("Wpisz poprawną kwotę wydatku.");
         return;
       }
 
-      const existingIndex = data.expenses.findIndex(e => 
-        e.desc.toLowerCase() === desc.toLowerCase() &&
-        e.category === cat &&
-        (e.subcategory || "") === (subcat || "")
-      );
+      data.expenses.push({
+        category: cat,
+        subcategory: subcat,
+        description: desc,
+        amount
+      });
 
-      if(existingIndex >= 0) {
-        data.expenses[existingIndex].amount += amount;
-      } else {
-        data.expenses.push({
-          category: cat,
-          subcategory: subcat || null,
-          desc: desc,
-          amount: amount
-        });
-      }
-
+      // Reset pól
       document.getElementById('expenseCategory').value = "";
       document.getElementById('expenseSubcategory').value = "";
-      document.getElementById('expenseSubcategory').style.display = 'none';
-      document.getElementById('subcategoryLabel').style.display = 'none';
+      document.getElementById('expenseSubcategory').style.display = "none";
+      document.getElementById('subcategoryLabel').style.display = "none";
       document.getElementById('expenseDesc').value = "";
       document.getElementById('expenseAmount').value = "";
 
-      updateExpenseList();
+      updateExpensesList();
       updateSummary();
-      saveData();
-    }
-
-    async function saveData() {
-      data.incomeSources.salary = parseFloat(document.getElementById('salaryInput').value) || 0;
-      data.incomeSources.childSupport = parseFloat(document.getElementById('childInput').value) || 0;
-
-      data.fixedExpenses.credit = parseFloat(document.getElementById('creditInput').value) || 0;
-      data.fixedExpenses.internet = parseFloat(document.getElementById('internetInput').value) || 0;
-      data.fixedExpenses.phone = parseFloat(document.getElementById('phoneInput').value) || 0;
-      data.fixedExpenses.allowance = parseFloat(document.getElementById('allowanceInput').value) || 0;
-      data.fixedExpenses.rent = parseFloat(document.getElementById('rentInput').value) || 0;
-      data.fixedExpenses.electricity = parseFloat(document.getElementById('electricityInput').value) || 0;
-      data.fixedExpenses.zus = parseFloat(document.getElementById('zusInput').value) || 0;
-      data.fixedExpenses.accountant = parseFloat(document.getElementById('accountantInput').value) || 0;
-      data.fixedExpenses.eagon = parseFloat(document.getElementById('eagonInput').value) || 0;
-      data.fixedExpenses.kindergarten = parseFloat(document.getElementById('kindergartenInput').value) || 0;
-
-      data.spentAlready = parseFloat(document.getElementById('spentAlreadyInput').value) || 0;
-
-      data.subscriptions.netflix = parseFloat(document.getElementById('netflixInput').value) || 0;
-      data.subscriptions.prime = parseFloat(document.getElementById('primeInput').value) || 0;
-      data.subscriptions.disney = parseFloat(document.getElementById('disneyInput').value) || 0;
-      data.subscriptions.xbox = parseFloat(document.getElementById('xboxInput').value) || 0;
-
-      try {
-        const res = await fetch(apiUrl, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key": masterKey
-          },
-          body: JSON.stringify(data)
-        });
-        if(!res.ok) throw new Error("Nie udało się zapisać danych");
-        alert("✅ Dane zostały zapisane.");
-      } catch(e) {
-        alert("❌ Błąd zapisu: " + e.message);
-      }
     }
 
     function resetBin() {
-      if(confirm("Czy na pewno chcesz wyczyścić wszystkie dane?")) {
+      if(confirm("Czy na pewno chcesz zresetować WSZYSTKIE dane? Operacja jest nieodwracalna!")) {
         data = {
           incomeSources: { salary: 0, childSupport: 0 },
           fixedExpenses: {
@@ -353,8 +447,32 @@ Dzienny budżet na wydatki ad hoc: ${dailyAvailable.toFixed(2)} zł
       }
     }
 
-    // Inicjalizacja
-    loadData();
+    async function saveData() {
+      gatherFormData();
+      try {
+        const res = await fetch(apiUrl, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": masterKey
+          },
+          body: JSON.stringify(data)
+        });
+        if(!res.ok) throw new Error("Błąd zapisu: " + res.statusText);
+        alert("Dane zapisane pomyślnie! ✅");
+      } catch(e) {
+        alert("Błąd zapisu: " + e.message);
+      }
+    }
+
+    // Aktualizuj podsumowanie przy każdej zmianie inputów
+    const inputs = document.querySelectorAll("input[type=number]");
+    inputs.forEach(inp => inp.addEventListener("input", updateSummary));
+
+    window.onload = () => {
+      loadData();
+      updateSummary();
+    };
   </script>
 </body>
 </html>

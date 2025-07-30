@@ -301,23 +301,34 @@
       updateExpenseList();
     }
 
-    function updateExpenseList() {
+ function updateExpenseList() {
   const ul = document.getElementById('expenseList');
   ul.innerHTML = '';
   (data.expenses || []).forEach((e, index) => {
+    const li = document.createElement('li');
+    li.style.marginBottom = '0.5rem';
+
+    const descDiv = document.createElement('div');
     let displayText = e.desc + ': ' + e.amount.toFixed(2) + ' zł';
     if(e.category) displayText += ` [${e.category}${e.subcategory ? ' > ' + e.subcategory : ''}]`;
-    const li = document.createElement('li');
+    descDiv.textContent = displayText;
+    descDiv.style.marginBottom = '0.3rem';
 
-    // Tworzymy tekst i przycisk Usuń
-    li.textContent = displayText + " ";
     const btn = document.createElement('button');
     btn.textContent = 'Usuń';
-    btn.style.marginLeft = '10px';
+    btn.style.width = '100%';
+    btn.style.padding = '0.5rem';
+    btn.style.backgroundColor = '#b22222';
+    btn.style.color = 'white';
+    btn.style.border = 'none';
+    btn.style.borderRadius = '6px';
     btn.style.cursor = 'pointer';
+
     btn.onclick = () => {
       removeExpense(index);
     };
+
+    li.appendChild(descDiv);
     li.appendChild(btn);
     ul.appendChild(li);
   });

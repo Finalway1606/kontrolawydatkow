@@ -302,16 +302,26 @@
     }
 
     function updateExpenseList() {
-      const ul = document.getElementById('expenseList');
-      ul.innerHTML = '';
-      (data.expenses || []).forEach(e => {
-        let displayText = e.desc + ': ' + e.amount.toFixed(2) + ' zł';
-        if(e.category) displayText += ` [${e.category}${e.subcategory ? ' > ' + e.subcategory : ''}]`;
-        const li = document.createElement('li');
-        li.textContent = displayText;
-        ul.appendChild(li);
-      });
-    }
+  const ul = document.getElementById('expenseList');
+  ul.innerHTML = '';
+  (data.expenses || []).forEach((e, index) => {
+    let displayText = e.desc + ': ' + e.amount.toFixed(2) + ' zł';
+    if(e.category) displayText += ` [${e.category}${e.subcategory ? ' > ' + e.subcategory : ''}]`;
+    const li = document.createElement('li');
+
+    // Tworzymy tekst i przycisk Usuń
+    li.textContent = displayText + " ";
+    const btn = document.createElement('button');
+    btn.textContent = 'Usuń';
+    btn.style.marginLeft = '10px';
+    btn.style.cursor = 'pointer';
+    btn.onclick = () => {
+      removeExpense(index);
+    };
+    li.appendChild(btn);
+    ul.appendChild(li);
+  });
+}
 
     function updateSummary() {
       const income = (data.incomeSources?.salary || 0) + (data.incomeSources?.childSupport || 0);

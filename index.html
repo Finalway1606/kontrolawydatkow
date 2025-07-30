@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Budżet Domowy</title>
+  <style>
+    body { font-family: sans-serif; background: #f4f4f4; padding: 2rem; max-width: 800px; margin: auto; }
+    section { background: white; padding: 1rem 2rem; margin-bottom: 2rem; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    h1, h2 { text-align: center; }
+    label { display: block; margin-top: 1rem; }
+    input, select { width: 100%; padding: 0.5rem; margin-top: 0.3rem; }
+    button { margin-top: 1rem; padding: 0.5rem 1rem; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    .result { font-size: 1.1rem; font-weight: bold; white-space: pre-wrap; }
+    ul { padding-left: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Budżet Domowy</h1>
+
+  <section>
+    <h2>Wpływy</h2>
+    <label>Pensja:</label>
+    <input type="number" id="salaryInput" />
+
+    <label>800+:</label>
+    <input type="number" id="childInput" />
+  </section>
+
+  <section>
+    <h2>Wydatki stałe</h2>
+    <label>Rata kredytu:</label>
+    <input type="number" id="creditInput" />
+
+    <label>Internet:</label>
+    <input type="number" id="internetInput" />
+
+    <label>Telefony:</label>
+    <input type="number" id="phoneInput" />
+
+    <label>Kieszonkowe:</label>
+    <input type="number" id="allowanceInput" />
+
+    <label>Czynsz:</label>
+    <input type="number" id="rentInput" />
+
+    <label>Prąd:</label>
+    <input type="number" id="electricityInput" />
+
+    <label>ZUS:</label>
+    <input type="number" id="zusInput" />
+
+    <label>Księgowa:</label>
+    <input type="number" id="accountantInput" />
+
+    <label>Eagon:</label>
+    <input type="number" id="eagonInput" />
+
+    <label>Przedszkole:</label>
+    <input type="number" id="kindergartenInput" />
+
+    <label>Wydatki już poniesione (np. zakupy):</label>
+    <input type="number" id="spentAlreadyInput" />
+  </section>
+
+  <section>
+    <h2>Subskrypcje</h2>
+    <label>Netflix (miesięcznie):</label>
+    <input type="number" id="netflixInput" />
+
+    <label>Prime (miesięcznie):</label>
+    <input type="number" id="primeInput" />
+
+    <label>Disney+ (rocznie):</label>
+    <input type="number" id="disneyInput" />
+
+    <label>Xbox (miesięcznie):</label>
+    <input type="number" id="xboxInput" />
+  </section>
+
+  <section>
+    <h2>Wydatki ad hoc, uzupełniane po każdym zakupie</h2>
+    <label>Kategoria:</label>
+    <select id="expenseCategory" onchange="categoryChanged()">
+      <option value="">-- Wybierz kategorię --</option>
+      <option value="spozywka">Spożywka</option>
+      <option value="zarcie">Żarcie na dowóz</option>
+      <option value="przyjemnosci">Przyjemności</option>
+    </select>
+
+    <label id="subcategoryLabel" style="display:none; margin-top: 1rem;">Podkategoria:</label>
+    <select id="expenseSubcategory" style="display:none;">
+      <option value="">-- Wybierz podkategorię --</option>
+      <option value="zabka">Żabka</option>
+      <option value="auchan">Auchan</option>
+    </select>
+
+    <label>Opis wydatku:</label>
+    <input type="text" id="expenseDesc" />
+    <label>Kwota wydatku:</label>
+    <input type="number" id="expenseAmount" />
+    <button onclick="addExpense()">➕ Dodaj wydatek</button>
+  </section>
+
+  <section>
+    <h2>Podsumowanie</h2>
+    <p id="summaryText" class="result"></p>
+    <h3>Wydatki ad hoc:</h3>
+    <ul id="expenseList"></ul>
+    <button onclick="resetBin()">🧹 Resetuj dane (ostrzeżenie!)</button>
+  </section>
+
+  <div style="text-align:center; margin-top:2rem;">
+    <button onclick="saveData()">💾 Zapisz dane</button>
+  </div>
+
+  <script>
+    const binId = "688a2a2c7b4b8670d8a9e071";
+    const masterKey = "$2a$10$PrRx.RBOnJmEFTqQQLH/Tu8TXFwoNEI.j/XEFF19EYFYELKzSX9BC";
+    const apiUrl = `https://api.jsonbin.io/v3/b/${binId}`;
+
+    let data = {
+      incomeSources: { salary: 0, childSupport: 0 },
+      fixedExpenses: {
+        credit: 0,
+        internet: 0,
+        phone: 0,
+        allowance: 0,
+        rent: 0,
+        electricity: 0,
+        zus: 0,
+        accountant: 0,
+        eagon: 0,
+        kindergarten: 0
+      },
+      subscriptions: { netflix: 0, prime: 0, disney: 0, xbox: 0 },
+      spentAlready: 0,
+      expenses: []
+    };
+
+    function categoryChanged() {
+      const cat = document.getElementById('expenseCategory').value;
+      const subcatLabel = document.getElementById('subcategoryLabel');
+      const subcatSelect = document.getElementById('expenseSubcategory');
+      if(cat === 'spozywka') {
+        subcatLabel.style.display = 'block';
+        subcatSelect.style.display = 'block';
+      } else {
+        subcatLabel.style.display = 'none';
+        subcatSelect.style.display = 'none';
+        subcatSelect.value = "";
+      }
+    }
+
+    async function loadData() {
+      try {
+        const res = await fetch(apiUrl, {
+          headers: { "X-Master-Key": masterKey }
+        });
+        const json = await res.json();
+        data = json.record;
+        updateForm();
+        updateSummary();
+      } catch (e) {
+        alert("❌ Błąd pobierania: " + e.message);
+      }
+    }
+
+    function updateForm() {
+      document.getElementById('salaryInput').value = data.incomeSources?.salary || 0;
+      document.getElementById('childInput').value = data.incomeSources?.childSupport || 0;
+      document.getElementById('creditInput').value = data.fixedExpenses?.credit || 0;
+      document.getElementById('internetInput').value = data.fixedExpenses?.internet || 0;
+      document.getElementById('phoneInput').value = data.fixedExpenses?.phone || 0;
+      document.getElementById('allowanceInput').value = data.fixedExpenses?.allowance || 0;
+      document.getElementById('rentInput').value = data.fixedExpenses?.rent || 0;
+      document.getElementById('electricityInput').value = data.fixedExpenses?.electricity || 0;
+      document.getElementById('zusInput').value = data.fixedExpenses?.zus || 0;
+      document.getElementById('accountantInput').value = data.fixedExpenses?.accountant || 0;
+      document.getElementById('eagonInput').value = data.fixedExpenses?.eagon || 0;
+      document.getElementById('kindergartenInput').value = data.fixedExpenses?.kindergarten || 0;
+      document.getElementById('spentAlreadyInput').value = data.spentAlready || 0;
+
+      document.getElementById('netflixInput').value = data.subscriptions?.netflix || 0;
+      document.getElementById('primeInput').value = data.subscriptions?.prime || 0;
+      document.getElementById('disneyInput').value = data.subscriptions?.disney || 0;
+      document.getElementById('xboxInput').value = data.subscriptions?.xbox || 0;
+
+      updateExpenseList();
+    }
+
+    function updateExpenseList() {
+      const ul = document.getElementById('expenseList');
+      ul.innerHTML = '';
+      (data.expenses || []).forEach(e => {
+        let displayText = e.desc + ': ' + e.amount.toFixed(2) + ' zł';
+        if(e.category) displayText += ` [${e.category}${e.subcategory ? ' > ' + e.subcategory : ''}]`;
+        const li = document.createElement('li');
+        li.textContent = displayText;
+        ul.appendChild(li);
+      });
+    }
+
+    function updateSummary() {
+      const income = (data.incomeSources?.salary || 0) + (data.incomeSources?.childSupport || 0);
+      const fixed = Object.values(data.fixedExpenses || {}).reduce((a, b) => a + b, 0);
+
+      const subsMonthly = 
+        (data.subscriptions?.netflix || 0) +
+        (data.subscriptions?.prime || 0) +
+        ((data.subscriptions?.disney || 0) / 12) +
+        (data.subscriptions?.xbox || 0);
+
+      const adHocExpenses = (data.expenses || []).reduce((sum, e) => sum + e.amount, 0);
+      const totalSpent = fixed + subsMonthly + (data.spentAlready || 0) + adHocExpenses;
+      const savings = 1000;
+
+      const now = new Date();
+      const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+
+      const available = income - totalSpent - savings;
+      const dailyAvailable = available > 0 ? (available / daysInMonth) : 0;
+
+      const monthlyExpenses = fixed + subsMonthly + (data.spentAlready || 0) + adHocExpenses;
+
+      const text = `
+Dochód: ${income.toFixed(2)} zł |
+Stałe wydatki: ${fixed.toFixed(2)} zł |
+Subskrypcje (miesięcznie): ${subsMonthly.toFixed(2)} zł |
+Wydatki już poniesione: ${data.spentAlready.toFixed(2)} zł |
+Wydatki ad hoc: ${adHocExpenses.toFixed(2)} zł
+-------------------------
+Łączne miesięczne wydatki: ${monthlyExpenses.toFixed(2)} zł
+Oszczędności: ${savings.toFixed(2)} zł
+Dostępne po wydatkach i oszczędnościach: ${available.toFixed(2)} zł
+Dzienny budżet na wydatki ad hoc: ${dailyAvailable.toFixed(2)} zł
+      `;
+      document.getElementById('summaryText').textContent = text.trim();
+    }
+
+    function addExpense() {
+      const cat = document.getElementById('expenseCategory').value;
+      const subcat = document.getElementById('expenseSubcategory').value;
+      const desc = document.getElementById('expenseDesc').value.trim();
+      const amount = parseFloat(document.getElementById('expenseAmount').value);
+
+      if(!cat) {
+        alert("Wybierz kategorię");
+        return;
+      }
+      if(cat === 'spozywka' && !subcat) {
+        alert("Wybierz podkategorię dla Spożywki");
+        return;
+      }
+      if(!desc) {
+        alert("Podaj opis wydatku");
+        return;
+      }
+      if(isNaN(amount) || amount <= 0) {
+        alert("Podaj poprawną kwotę większą niż 0");
+        return;
+      }
+
+      const existingIndex = data.expenses.findIndex(e => 
+        e.desc.toLowerCase() === desc.toLowerCase() &&
+        e.category === cat &&
+        (e.subcategory || "") === (subcat || "")
+      );
+
+      if(existingIndex >= 0) {
+        data.expenses[existingIndex].amount += amount;
+      } else {
+        data.expenses.push({
+          category: cat,
+          subcategory: subcat || null,
+          desc: desc,
+          amount: amount
+        });
+      }
+
+      document.getElementById('expenseCategory').value = "";
+      document.getElementById('expenseSubcategory').value = "";
+      document.getElementById('expenseSubcategory').style.display = 'none';
+      document.getElementById('subcategoryLabel').style.display = 'none';
+      document.getElementById('expenseDesc').value = "";
+      document.getElementById('expenseAmount').value = "";
+
+      updateExpenseList();
+      updateSummary();
+      saveData();
+    }
+
+    async function saveData() {
+      data.incomeSources.salary = parseFloat(document.getElementById('salaryInput').value) || 0;
+      data.incomeSources.childSupport = parseFloat(document.getElementById('childInput').value) || 0;
+
+      data.fixedExpenses.credit = parseFloat(document.getElementById('creditInput').value) || 0;
+      data.fixedExpenses.internet = parseFloat(document.getElementById('internetInput').value) || 0;
+      data.fixedExpenses.phone = parseFloat(document.getElementById('phoneInput').value) || 0;
+      data.fixedExpenses.allowance = parseFloat(document.getElementById('allowanceInput').value) || 0;
+      data.fixedExpenses.rent = parseFloat(document.getElementById('rentInput').value) || 0;
+      data.fixedExpenses.electricity = parseFloat(document.getElementById('electricityInput').value) || 0;
+      data.fixedExpenses.zus = parseFloat(document.getElementById('zusInput').value) || 0;
+      data.fixedExpenses.accountant = parseFloat(document.getElementById('accountantInput').value) || 0;
+      data.fixedExpenses.eagon = parseFloat(document.getElementById('eagonInput').value) || 0;
+      data.fixedExpenses.kindergarten = parseFloat(document.getElementById('kindergartenInput').value) || 0;
+
+      data.spentAlready = parseFloat(document.getElementById('spentAlreadyInput').value) || 0;
+
+      data.subscriptions.netflix = parseFloat(document.getElementById('netflixInput').value) || 0;
+      data.subscriptions.prime = parseFloat(document.getElementById('primeInput').value) || 0;
+      data.subscriptions.disney = parseFloat(document.getElementById('disneyInput').value) || 0;
+      data.subscriptions.xbox = parseFloat(document.getElementById('xboxInput').value) || 0;
+
+      try {
+        const res = await fetch(apiUrl, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": masterKey
+          },
+          body: JSON.stringify(data)
+        });
+        if(!res.ok) throw new Error("Nie udało się zapisać danych");
+        alert("✅ Dane zostały zapisane.");
+      } catch(e) {
+        alert("❌ Błąd zapisu: " + e.message);
+      }
+    }
+
+    function resetBin() {
+      if(confirm("Czy na pewno chcesz wyczyścić wszystkie dane?")) {
+        data = {
+          incomeSources: { salary: 0, childSupport: 0 },
+          fixedExpenses: {
+            credit: 0,
+            internet: 0,
+            phone: 0,
+            allowance: 0,
+            rent: 0,
+            electricity: 0,
+            zus: 0,
+            accountant: 0,
+            eagon: 0,
+            kindergarten: 0
+          },
+          subscriptions: { netflix: 0, prime: 0, disney: 0, xbox: 0 },
+          spentAlready: 0,
+          expenses: []
+        };
+        updateForm();
+        updateSummary();
+        saveData();
+      }
+    }
+
+    // Inicjalizacja
+    loadData();
+  </script>
+</body>
+</html>

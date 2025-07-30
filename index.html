@@ -37,19 +37,19 @@
       color: #ffd966;
     }
     input, select {
-  width: 100%;
-  max-width: 350px; /* maksymalna szerokość pól */
-  box-sizing: border-box; /* uwzględnia padding i border w szerokości */
-  padding: 0.5rem 0.8rem;
-  margin-top: 0.3rem;
-  border-radius: 6px;
-  border: 1px solid #d4af37;
-  background: #3b3b3b;
-  color: #ffd966;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-  display: block;
-}
+      width: 100%;
+      max-width: 350px;
+      box-sizing: border-box;
+      padding: 0.5rem 0.8rem;
+      margin-top: 0.3rem;
+      border-radius: 6px;
+      border: 1px solid #d4af37;
+      background: #3b3b3b;
+      color: #ffd966;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      display: block;
+    }
     input:focus, select:focus {
       outline: none;
       border-color: #ffd966;
@@ -303,38 +303,45 @@
       updateExpenseList();
     }
 
- function updateExpenseList() {
-  const ul = document.getElementById('expenseList');
-  ul.innerHTML = '';
-  (data.expenses || []).forEach((e, index) => {
-    const li = document.createElement('li');
-    li.style.marginBottom = '0.5rem';
+    function updateExpenseList() {
+      const ul = document.getElementById('expenseList');
+      ul.innerHTML = '';
+      (data.expenses || []).forEach((e, index) => {
+        const li = document.createElement('li');
+        li.style.marginBottom = '0.5rem';
 
-    const descDiv = document.createElement('div');
-    let displayText = e.desc + ': ' + e.amount.toFixed(2) + ' zł';
-    if(e.category) displayText += ` [${e.category}${e.subcategory ? ' > ' + e.subcategory : ''}]`;
-    descDiv.textContent = displayText;
-    descDiv.style.marginBottom = '0.3rem';
+        const descDiv = document.createElement('div');
+        let displayText = e.desc + ': ' + e.amount.toFixed(2) + ' zł';
+        if(e.category) displayText += ` [${e.category}${e.subcategory ? ' > ' + e.subcategory : ''}]`;
+        descDiv.textContent = displayText;
+        descDiv.style.marginBottom = '0.3rem';
 
-    const btn = document.createElement('button');
-    btn.textContent = 'Usuń';
-    btn.style.width = '100%';
-    btn.style.padding = '0.5rem';
-    btn.style.backgroundColor = '#b22222';
-    btn.style.color = 'white';
-    btn.style.border = 'none';
-    btn.style.borderRadius = '6px';
-    btn.style.cursor = 'pointer';
+        const btn = document.createElement('button');
+        btn.textContent = 'Usuń';
+        btn.style.width = '100%';
+        btn.style.padding = '0.5rem';
+        btn.style.backgroundColor = '#b22222';
+        btn.style.color = 'white';
+        btn.style.border = 'none';
+        btn.style.borderRadius = '6px';
+        btn.style.cursor = 'pointer';
 
-    btn.onclick = () => {
-      removeExpense(index);
-    };
+        btn.onclick = () => {
+          removeExpense(index);
+        };
 
-    li.appendChild(descDiv);
-    li.appendChild(btn);
-    ul.appendChild(li);
-  });
-}
+        li.appendChild(descDiv);
+        li.appendChild(btn);
+        ul.appendChild(li);
+      });
+    }
+
+    function removeExpense(index) {
+      data.expenses.splice(index, 1);
+      updateExpenseList();
+      updateSummary();
+      saveData();
+    }
 
     function updateSummary() {
       const income = (data.incomeSources?.salary || 0) + (data.incomeSources?.childSupport || 0);
@@ -355,8 +362,6 @@
 
       const available = income - totalSpent - savings;
       const dailyAvailable = available > 0 ? (available / daysInMonth) : 0;
-
-      const monthlyExpenses = fixed + subsMonthly + (data.spentAlready || 0) + adHocExpenses;
 
       const text = 
 `Dochód: ${income.toFixed(2)} zł
@@ -434,7 +439,7 @@ Dostępne dziennie: ${dailyAvailable.toFixed(2)} zł
     }
 
     async function saveData() {
-      // Aktualizuj dane z formularzy
+      // Aktualizuj dane z inputów przed zapisem
       data.incomeSources.salary = parseFloat(document.getElementById('salaryInput').value) || 0;
       data.incomeSources.childSupport = parseFloat(document.getElementById('childInput').value) || 0;
 
@@ -456,30 +461,24 @@ Dostępne dziennie: ${dailyAvailable.toFixed(2)} zł
       data.subscriptions.disney = parseFloat(document.getElementById('disneyInput').value) || 0;
       data.subscriptions.xbox = parseFloat(document.getElementById('xboxInput').value) || 0;
 
-      updateSummary();
-
       try {
         const res = await fetch(apiUrl, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json',
-            'X-Master-Key': masterKey,
-            'X-Bin-Versioning': 'false'
+            "Content-Type": "application/json",
+            "X-Master-Key": masterKey
           },
           body: JSON.stringify(data)
         });
-        if(res.ok) {
-          alert('✅ Dane zostały zapisane.');
-        } else {
-          alert('❌ Błąd zapisu danych: ' + res.statusText);
-        }
+        if(!res.ok) throw new Error(res.statusText);
+        alert('✅ Dane zostały zapisane!');
       } catch (e) {
-        alert('❌ Błąd sieci: ' + e.message);
+        alert("❌ Błąd zapisu: " + e.message);
       }
+      updateSummary();
     }
 
-    // Załaduj dane przy starcie
-    loadData();
+    window.onload = loadData;
   </script>
 </body>
 </html>

@@ -36,9 +36,7 @@
       font-weight: 600;
       color: #ffd966;
     }
-    input, select {
-      width: 100%;
-      max-width: 350px;
+    input[type="number"], input[type="text"], select {
       box-sizing: border-box;
       padding: 0.5rem 0.8rem;
       margin-top: 0.3rem;
@@ -48,30 +46,35 @@
       color: #ffd966;
       font-size: 1rem;
       transition: border-color 0.3s ease;
-      display: block;
+      display: inline-block;
+      vertical-align: middle;
     }
-    input:focus, select:focus {
+    input[type="number"], input[type="text"] {
+      width: 60%;
+      max-width: 300px;
+    }
+    select {
+      width: auto;
+      min-width: 160px;
+    }
+    input[type="number"]:focus, input[type="text"]:focus, select:focus {
       outline: none;
       border-color: #ffd966;
       background: #444;
       color: #fff;
     }
     button {
-      margin-top: 1.2rem;
-      padding: 0.6rem 1.2rem;
+      margin-top: 0.5rem;
+      padding: 0.4rem 1rem;
       background: #d4af37;
       color: #1e1e1e;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.9rem;
       transition: background-color 0.3s ease;
-      display: block;
-      width: 100%;
-      max-width: 240px;
-      margin-left: auto;
-      margin-right: auto;
+      vertical-align: middle;
     }
     button:hover {
       background: #ffd966;
@@ -98,7 +101,27 @@
       border-radius: 8px;
       background: #3b3b3b;
     }
-
+    .flex-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.6rem;
+    }
+    .flex-row input[type="text"] {
+      width: 40%;
+    }
+    .flex-row input[type="number"] {
+      width: 30%;
+    }
+    .expense-button {
+      background-color: #b22222;
+      color: white;
+      padding: 0.4rem 0.7rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      min-width: 70px;
+    }
     /* Responsywność */
     @media (max-width: 480px) {
       body {
@@ -111,8 +134,9 @@
       button {
         max-width: 100%;
       }
-      input, select {
+      input[type="number"], input[type="text"] {
         font-size: 1.1rem;
+        width: 100% !important;
       }
       label {
         font-size: 1rem;
@@ -126,70 +150,36 @@
       .result {
         font-size: 1rem;
       }
+      .flex-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .flex-row input[type="text"], .flex-row input[type="number"], .flex-row button {
+        width: 100% !important;
+        margin-top: 0.3rem;
+      }
     }
   </style>
 </head>
 <body>
   <h1>Budżet Domowy</h1>
 
-  <section>
+  <section id="incomeSection">
     <h2>Wpływy</h2>
-    <label for="salaryInput">Pensja:</label>
-    <input type="number" id="salaryInput" />
-
-    <label for="childInput">800+:</label>
-    <input type="number" id="childInput" />
+    <div id="incomeList"></div>
+    <button onclick="addIncome()">➕ Dodaj wpływ</button>
   </section>
 
-  <section>
+  <section id="fixedExpensesSection">
     <h2>Wydatki stałe</h2>
-    <label for="creditInput">Rata kredytu:</label>
-    <input type="number" id="creditInput" />
-
-    <label for="internetInput">Internet:</label>
-    <input type="number" id="internetInput" />
-
-    <label for="phoneInput">Telefony:</label>
-    <input type="number" id="phoneInput" />
-
-    <label for="allowanceInput">Kieszonkowe:</label>
-    <input type="number" id="allowanceInput" />
-
-    <label for="rentInput">Czynsz:</label>
-    <input type="number" id="rentInput" />
-
-    <label for="electricityInput">Prąd:</label>
-    <input type="number" id="electricityInput" />
-
-    <label for="zusInput">ZUS:</label>
-    <input type="number" id="zusInput" />
-
-    <label for="accountantInput">Księgowa:</label>
-    <input type="number" id="accountantInput" />
-
-    <label for="eagonInput">Eagon:</label>
-    <input type="number" id="eagonInput" />
-
-    <label for="kindergartenInput">Przedszkole:</label>
-    <input type="number" id="kindergartenInput" />
-
-    <label for="spentAlreadyInput">Wydatki już poniesione (np. zakupy):</label>
-    <input type="number" id="spentAlreadyInput" />
+    <div id="fixedExpensesList"></div>
+    <button onclick="addFixedExpense()">➕ Dodaj wydatek stały</button>
   </section>
 
-  <section>
+  <section id="subscriptionsSection">
     <h2>Subskrypcje</h2>
-    <label for="netflixInput">Netflix (miesięcznie):</label>
-    <input type="number" id="netflixInput" />
-
-    <label for="primeInput">Prime (miesięcznie):</label>
-    <input type="number" id="primeInput" />
-
-    <label for="disneyInput">Disney+ (rocznie):</label>
-    <input type="number" id="disneyInput" />
-
-    <label for="xboxInput">Xbox (miesięcznie):</label>
-    <input type="number" id="xboxInput" />
+    <div id="subscriptionsList"></div>
+    <button onclick="addSubscription()">➕ Dodaj subskrypcję</button>
   </section>
 
   <section>
@@ -198,18 +188,18 @@
     <select id="expenseCategory" onchange="categoryChanged()">
       <option value="">-- Wybierz kategorię --</option>
       <option value="spozywka">Spożywka</option>
-	  <option value="restauracje">Restauracje</option>
-	  <option value="paliwo">Paliwo</option>
-	  <option value="wakacje">Wakacje</option>
-	  <option value="inne">Inne</option>
+      <option value="restauracje">Restauracje</option>
+      <option value="paliwo">Paliwo</option>
+      <option value="wakacje">Wakacje</option>
+      <option value="inne">Inne</option>
     </select>
 
     <label id="subcategoryLabel" style="display:none; margin-top: 1rem;" for="expenseSubcategory">Podkategoria:</label>
     <select id="expenseSubcategory" style="display:none;">
-		<option value="">-- Wybierz podkategorię --</option>
-	</select>
+      <option value="">-- Wybierz podkategorię --</option>
+    </select>
 
-    <label for="expenseDesc">Opis wydatku:</label>
+    <label for="expenseDesc">Opis wydatku (opcjonalny):</label>
     <input type="text" id="expenseDesc" />
     <label for="expenseAmount">Kwota wydatku:</label>
     <input type="number" id="expenseAmount" />
@@ -220,18 +210,7 @@
     <h2>Podsumowanie</h2>
     <p id="summaryText" class="result"></p>
     <h3>Wydatki ad hoc:</h3>
-    <table id="expenseList" style="width:100%; margin-top: 1rem; border-collapse: collapse; color: #fff3b0;">
-  <thead>
-    <tr>
-      <th style="text-align:left; padding: 0.5rem;">Kategoria</th>
-      <th style="text-align:left; padding: 0.5rem;">Podkategoria</th>
-      <th style="text-align:left; padding: 0.5rem;">Opis</th>
-      <th style="text-align:right; padding: 0.5rem;">Kwota</th>
-      <th style="text-align:center; padding: 0.5rem;">Usuń</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+    <ul id="expenseList"></ul>
     <button onclick="resetBin()">🧹 Resetuj dane (ostrzeżenie!)</button>
   </section>
 
@@ -244,283 +223,319 @@
     const masterKey = "$2a$10$PrRx.RBOnJmEFTqQQLH/Tu8TXFwoNEI.j/XEFF19EYFYELKzSX9BC";
     const apiUrl = `https://api.jsonbin.io/v3/b/${binId}`;
 
-    let data = {
-      incomeSources: { salary: 0, childSupport: 0 },
-      fixedExpenses: {
-        credit: 0,
-        internet: 0,
-        phone: 0,
-        allowance: 0,
-        rent: 0,
-        electricity: 0,
-        zus: 0,
-        accountant: 0,
-        eagon: 0,
-        kindergarten: 0
-      },
-      subscriptions: { netflix: 0, prime: 0, disney: 0, xbox: 0 },
-      spentAlready: 0,
-      expenses: []
+    // Początkowe dane
+    let incomes = [
+      { name: "Pensja", amount: 1500 },
+      { name: "800+", amount: 800 },
+    ];
+    let fixedExpenses = [
+      { name: "Internet", amount: 75 },
+      { name: "Prąd", amount: 350 },
+    ];
+    let subscriptions = [
+      { name: "Netflix", amount: 80 },
+      { name: "Apple", amount: 30 },
+    ];
+
+    let adHocExpenses = [];
+
+    // Kategorie i podkategorie
+    const options = {
+      spozywka: ['Biedronka', 'Lidl', 'Żabka', 'Carrefour', 'Auchan'],
+      restauracje: ['McDonald\'s', 'KFC', 'Lokalna knajpa', 'Dowóz'],
+      paliwo: ['Orlen', 'BP', 'Shell'],
+      wakacje: ['Booking', 'Airbnb', 'LOT', 'Inne'],
+      inne: ['Brak podkategorii']
     };
+
+    // Funkcje dodawania nowych wpisów do list
+
+    function createInputRow(container, dataArray, index, type) {
+      // Tworzy wiersz inputów i przycisk usuwania
+      const div = document.createElement("div");
+      div.className = "flex-row";
+
+      const nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.value = dataArray[index].name;
+      nameInput.placeholder = "Nazwa";
+      nameInput.oninput = () => {
+        dataArray[index].name = nameInput.value;
+      };
+
+      const amountInput = document.createElement("input");
+      amountInput.type = "number";
+      amountInput.min = "0";
+      amountInput.step = "0.01";
+      amountInput.value = dataArray[index].amount;
+      amountInput.placeholder = "Kwota";
+      amountInput.oninput = () => {
+        let val = parseFloat(amountInput.value);
+        if (isNaN(val) || val < 0) val = 0;
+        dataArray[index].amount = val;
+      };
+
+      const removeButton = document.createElement("button");
+      removeButton.textContent = "Usuń";
+      removeButton.className = "expense-button";
+      removeButton.onclick = () => {
+        dataArray.splice(index, 1);
+        renderAll();
+      };
+
+      div.appendChild(nameInput);
+      div.appendChild(amountInput);
+      div.appendChild(removeButton);
+
+      container.appendChild(div);
+    }
+
+    function renderIncomes() {
+      const container = document.getElementById("incomeList");
+      container.innerHTML = "";
+      incomes.forEach((_, i) => createInputRow(container, incomes, i, "income"));
+    }
+
+    function renderFixedExpenses() {
+      const container = document.getElementById("fixedExpensesList");
+      container.innerHTML = "";
+      fixedExpenses.forEach((_, i) => createInputRow(container, fixedExpenses, i, "fixed"));
+    }
+
+    function renderSubscriptions() {
+      const container = document.getElementById("subscriptionsList");
+      container.innerHTML = "";
+      subscriptions.forEach((_, i) => createInputRow(container, subscriptions, i, "subs"));
+    }
+
+    // Obsługa wydatków ad hoc
 
     function categoryChanged() {
-  const cat = document.getElementById('expenseCategory').value;
-  const subcatSelect = document.getElementById('expenseSubcategory');
-  const subcatLabel = document.getElementById('subcategoryLabel');
+      const catSelect = document.getElementById("expenseCategory");
+      const subcatSelect = document.getElementById("expenseSubcategory");
+      const subcatLabel = document.getElementById("subcategoryLabel");
+      const selectedCategory = catSelect.value;
 
-  const options = {
-    spozywka: ['Biedronka', 'Lidl', 'Żabka', 'Carrefour', 'Auchan'],
-    restauracje: ['McDonald\'s', 'KFC', 'Lokalna knajpa', 'Dowóz'],
-    paliwo: ['Orlen', 'BP', 'Shell'],
-    wakacje: ['Booking', 'Airbnb', 'LOT', 'Inne'],
-    inne: ['Brak podkategorii']
-  };
-
-  if (options[cat]) {
-    subcatLabel.style.display = 'block';
-    subcatSelect.style.display = 'block';
-    subcatSelect.innerHTML = '<option value="">-- Wybierz podkategorię --</option>';
-    options[cat].forEach(sub => {
-      const opt = document.createElement('option');
-      opt.value = sub;
-      opt.textContent = sub;
-      subcatSelect.appendChild(opt);
-    });
-  } else {
-    subcatLabel.style.display = 'none';
-    subcatSelect.style.display = 'none';
-    subcatSelect.innerHTML = '';
-  }
-}
-
-    async function loadData() {
-      try {
-        const res = await fetch(apiUrl, {
-          headers: { "X-Master-Key": masterKey }
-        });
-        const json = await res.json();
-        data = json.record;
-        updateForm();
-        updateSummary();
-      } catch (e) {
-        alert("❌ Błąd pobierania: " + e.message);
+      if (!selectedCategory) {
+        subcatSelect.style.display = "none";
+        subcatLabel.style.display = "none";
+        subcatSelect.innerHTML = '<option value="">-- Wybierz podkategorię --</option>';
+        return;
       }
-    }
 
-    function updateForm() {
-      document.getElementById('salaryInput').value = data.incomeSources?.salary || 0;
-      document.getElementById('childInput').value = data.incomeSources?.childSupport || 0;
-      document.getElementById('creditInput').value = data.fixedExpenses?.credit || 0;
-      document.getElementById('internetInput').value = data.fixedExpenses?.internet || 0;
-      document.getElementById('phoneInput').value = data.fixedExpenses?.phone || 0;
-      document.getElementById('allowanceInput').value = data.fixedExpenses?.allowance || 0;
-      document.getElementById('rentInput').value = data.fixedExpenses?.rent || 0;
-      document.getElementById('electricityInput').value = data.fixedExpenses?.electricity || 0;
-      document.getElementById('zusInput').value = data.fixedExpenses?.zus || 0;
-      document.getElementById('accountantInput').value = data.fixedExpenses?.accountant || 0;
-      document.getElementById('eagonInput').value = data.fixedExpenses?.eagon || 0;
-      document.getElementById('kindergartenInput').value = data.fixedExpenses?.kindergarten || 0;
-      document.getElementById('spentAlreadyInput').value = data.spentAlready || 0;
+      const subs = options[selectedCategory] || [];
+      if (subs.length === 1 && subs[0] === "Brak podkategorii") {
+        subcatSelect.style.display = "none";
+        subcatLabel.style.display = "none";
+        subcatSelect.innerHTML = '<option value="">-- Wybierz podkategorię --</option>';
+        return;
+      }
 
-      document.getElementById('netflixInput').value = data.subscriptions?.netflix || 0;
-      document.getElementById('primeInput').value = data.subscriptions?.prime || 0;
-      document.getElementById('disneyInput').value = data.subscriptions?.disney || 0;
-      document.getElementById('xboxInput').value = data.subscriptions?.xbox || 0;
+      subcatSelect.style.display = "inline-block";
+      subcatLabel.style.display = "block";
 
-      updateExpenseList();
-    }
-
-    function updateExpenseList() {
-  const table = document.getElementById('expenseList').querySelector('tbody');
-  table.innerHTML = '';
-
-  (data.expenses || []).forEach((e, index) => {
-    const row = document.createElement('tr');
-
-    const tdCat = document.createElement('td');
-    tdCat.textContent = e.category || '';
-    tdCat.style.padding = '0.5rem';
-
-    const tdSub = document.createElement('td');
-    tdSub.textContent = e.subcategory || '';
-    tdSub.style.padding = '0.5rem';
-
-    const tdDesc = document.createElement('td');
-    tdDesc.textContent = e.desc || '-';
-    tdDesc.style.padding = '0.5rem';
-
-    const tdAmount = document.createElement('td');
-    tdAmount.textContent = e.amount.toFixed(2) + ' zł';
-    tdAmount.style.padding = '0.5rem';
-    tdAmount.style.textAlign = 'right';
-
-    const tdBtn = document.createElement('td');
-    tdBtn.style.textAlign = 'center';
-    tdBtn.style.padding = '0.5rem';
-    const btn = document.createElement('button');
-    btn.textContent = 'Usuń';
-    btn.style.background = '#b22222';
-    btn.style.color = '#fff';
-    btn.style.border = 'none';
-    btn.style.borderRadius = '6px';
-    btn.style.padding = '0.4rem 0.8rem';
-    btn.style.cursor = 'pointer';
-    btn.onclick = () => {
-      removeExpense(index);
-    };
-    tdBtn.appendChild(btn);
-
-    row.appendChild(tdCat);
-    row.appendChild(tdSub);
-    row.appendChild(tdDesc);
-    row.appendChild(tdAmount);
-    row.appendChild(tdBtn);
-
-    table.appendChild(row);
-  });
-}
-
-    function removeExpense(index) {
-      data.expenses.splice(index, 1);
-      updateExpenseList();
-      updateSummary();
-      saveData();
-    }
-
-    function updateSummary() {
-      const income = (data.incomeSources?.salary || 0) + (data.incomeSources?.childSupport || 0);
-      const fixed = Object.values(data.fixedExpenses || {}).reduce((a, b) => a + b, 0);
-
-      const subsMonthly = 
-        (data.subscriptions?.netflix || 0) +
-        (data.subscriptions?.prime || 0) +
-        ((data.subscriptions?.disney || 0) / 12) +
-        (data.subscriptions?.xbox || 0);
-
-      const adHocExpenses = (data.expenses || []).reduce((sum, e) => sum + e.amount, 0);
-      const totalSpent = fixed + subsMonthly + (data.spentAlready || 0) + adHocExpenses;
-      const savings = 1000;
-
-      const now = new Date();
-      const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-
-      const available = income - totalSpent - savings;
-      const dailyAvailable = available > 0 ? (available / daysInMonth) : 0;
-
-      const text = 
-`Dochód: ${income.toFixed(2)} zł
-Stałe wydatki: ${fixed.toFixed(2)} zł
-Subskrypcje (miesięcznie przeliczone): ${subsMonthly.toFixed(2)} zł
-Wydatki już poniesione: ${(data.spentAlready || 0).toFixed(2)} zł
-Wydatki ad hoc: ${adHocExpenses.toFixed(2)} zł
-------------------------------------
-Razem wydatków: ${totalSpent.toFixed(2)} zł
-Oszczędności (zarezerwowane): ${savings.toFixed(2)} zł
-Dostępne po wydatkach: ${available.toFixed(2)} zł
-Dostępne dziennie: ${dailyAvailable.toFixed(2)} zł
-`;
-
-      document.getElementById('summaryText').textContent = text;
+      // Wyczyść i dodaj nowe opcje
+      subcatSelect.innerHTML = '<option value="">-- Wybierz podkategorię --</option>';
+      subs.forEach(sub => {
+        const opt = document.createElement("option");
+        opt.value = sub;
+        opt.textContent = sub;
+        subcatSelect.appendChild(opt);
+      });
     }
 
     function addExpense() {
-      const cat = document.getElementById('expenseCategory').value;
-      if(!cat) {
-        alert('Wybierz kategorię!');
+      const category = document.getElementById("expenseCategory").value;
+      const subcategory = document.getElementById("expenseSubcategory").value;
+      const descInput = document.getElementById("expenseDesc");
+      const amountInput = document.getElementById("expenseAmount");
+
+      if (!category) {
+        alert("Wybierz kategorię.");
         return;
       }
-      const subcatSelect = document.getElementById('expenseSubcategory');
-      const subcat = subcatSelect.style.display !== 'none' ? subcatSelect.value : "";
-
-      const desc = document.getElementById('expenseDesc').value.trim(); // opis opcjonalny
-
-      const amount = parseFloat(document.getElementById('expenseAmount').value);
-      if(isNaN(amount) || amount <= 0) {
-        alert('Podaj poprawną kwotę!');
+      if (document.getElementById("expenseSubcategory").style.display !== "none" && !subcategory) {
+        alert("Wybierz podkategorię.");
+        return;
+      }
+      let amount = parseFloat(amountInput.value);
+      if (isNaN(amount) || amount <= 0) {
+        alert("Podaj poprawną kwotę.");
         return;
       }
 
-      data.expenses.push({ category: cat, subcategory: subcat, desc: desc, amount: amount });
-      updateExpenseList();
+      // Opis jest opcjonalny
+      let desc = descInput.value.trim();
+      let fullDesc = "";
+
+      if (desc) {
+        fullDesc = subcategory && subcategory !== '' ? `${category} > ${subcategory}: ${desc}` : `${category}: ${desc}`;
+      } else {
+        fullDesc = subcategory && subcategory !== '' ? `${category} > ${subcategory}` : `${category}`;
+      }
+
+      adHocExpenses.push({
+        category,
+        subcategory,
+        name: fullDesc,
+        amount
+      });
+
+      // Reset formularza
+      document.getElementById("expenseCategory").value = "";
+      categoryChanged(); // ukrywa/zeruje podkategorię
+      descInput.value = "";
+      amountInput.value = "";
+
+      renderExpenses();
       updateSummary();
-
-      // Wyczyść pola
-      document.getElementById('expenseCategory').value = "";
-      document.getElementById('expenseSubcategory').value = "";
-      categoryChanged();
-      document.getElementById('expenseDesc').value = "";
-      document.getElementById('expenseAmount').value = "";
     }
+
+    function renderExpenses() {
+      const list = document.getElementById("expenseList");
+      list.innerHTML = "";
+      adHocExpenses.forEach((exp, i) => {
+        const li = document.createElement("li");
+        li.textContent = `${exp.name} — ${exp.amount.toFixed(2)} zł `;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "Usuń";
+        removeBtn.className = "expense-button";
+        removeBtn.onclick = () => {
+          adHocExpenses.splice(i, 1);
+          renderExpenses();
+          updateSummary();
+        };
+        li.appendChild(removeBtn);
+
+        list.appendChild(li);
+      });
+    }
+
+    // Dodawanie pozycji do list
+
+    function addIncome() {
+      incomes.push({ name: "", amount: 0 });
+      renderIncomes();
+      updateSummary();
+    }
+
+    function addFixedExpense() {
+      fixedExpenses.push({ name: "", amount: 0 });
+      renderFixedExpenses();
+      updateSummary();
+    }
+
+    function addSubscription() {
+      subscriptions.push({ name: "", amount: 0 });
+      renderSubscriptions();
+      updateSummary();
+    }
+
+    // Podsumowanie
+
+    function updateSummary() {
+      const totalIncome = incomes.reduce((acc, val) => acc + val.amount, 0);
+      const totalFixed = fixedExpenses.reduce((acc, val) => acc + val.amount, 0);
+      const totalSubs = subscriptions.reduce((acc, val) => acc + val.amount, 0);
+      const totalAdHoc = adHocExpenses.reduce((acc, val) => acc + val.amount, 0);
+
+      const balance = totalIncome - (totalFixed + totalSubs + totalAdHoc);
+
+      let text = `Wpływy: ${totalIncome.toFixed(2)} zł\n`;
+      text += `Wydatki stałe: ${totalFixed.toFixed(2)} zł\n`;
+      text += `Subskrypcje: ${totalSubs.toFixed(2)} zł\n`;
+      text += `Wydatki ad hoc: ${totalAdHoc.toFixed(2)} zł\n`;
+      text += `---------------------------------\n`;
+      text += `Saldo: ${balance.toFixed(2)} zł\n`;
+
+      document.getElementById("summaryText").textContent = text;
+    }
+
+    // Resetowanie danych
 
     function resetBin() {
-      if(confirm("Czy na pewno chcesz zresetować wszystkie dane?")) {
-        data = {
-          incomeSources: { salary: 0, childSupport: 0 },
-          fixedExpenses: {
-            credit: 0,
-            internet: 0,
-            phone: 0,
-            allowance: 0,
-            rent: 0,
-            electricity: 0,
-            zus: 0,
-            accountant: 0,
-            eagon: 0,
-            kindergarten: 0
-          },
-          subscriptions: { netflix: 0, prime: 0, disney: 0, xbox: 0 },
-          spentAlready: 0,
-          expenses: []
-        };
-        updateForm();
+      if (confirm("Na pewno chcesz wyczyścić wszystkie dane?")) {
+        incomes = [];
+        fixedExpenses = [];
+        subscriptions = [];
+        adHocExpenses = [];
+        renderAll();
         updateSummary();
-        saveData();
+        alert("Dane zostały wyczyszczone.");
       }
     }
+
+    // Renderowanie wszystkiego
+
+    function renderAll() {
+      renderIncomes();
+      renderFixedExpenses();
+      renderSubscriptions();
+      renderExpenses();
+    }
+
+    // Zapis danych do jsonbin.io
 
     async function saveData() {
-      // Aktualizuj dane z inputów przed zapisem
-      data.incomeSources.salary = parseFloat(document.getElementById('salaryInput').value) || 0;
-      data.incomeSources.childSupport = parseFloat(document.getElementById('childInput').value) || 0;
-
-      data.fixedExpenses.credit = parseFloat(document.getElementById('creditInput').value) || 0;
-      data.fixedExpenses.internet = parseFloat(document.getElementById('internetInput').value) || 0;
-      data.fixedExpenses.phone = parseFloat(document.getElementById('phoneInput').value) || 0;
-      data.fixedExpenses.allowance = parseFloat(document.getElementById('allowanceInput').value) || 0;
-      data.fixedExpenses.rent = parseFloat(document.getElementById('rentInput').value) || 0;
-      data.fixedExpenses.electricity = parseFloat(document.getElementById('electricityInput').value) || 0;
-      data.fixedExpenses.zus = parseFloat(document.getElementById('zusInput').value) || 0;
-      data.fixedExpenses.accountant = parseFloat(document.getElementById('accountantInput').value) || 0;
-      data.fixedExpenses.eagon = parseFloat(document.getElementById('eagonInput').value) || 0;
-      data.fixedExpenses.kindergarten = parseFloat(document.getElementById('kindergartenInput').value) || 0;
-
-      data.spentAlready = parseFloat(document.getElementById('spentAlreadyInput').value) || 0;
-
-      data.subscriptions.netflix = parseFloat(document.getElementById('netflixInput').value) || 0;
-      data.subscriptions.prime = parseFloat(document.getElementById('primeInput').value) || 0;
-      data.subscriptions.disney = parseFloat(document.getElementById('disneyInput').value) || 0;
-      data.subscriptions.xbox = parseFloat(document.getElementById('xboxInput').value) || 0;
+      const data = {
+        incomes,
+        fixedExpenses,
+        subscriptions,
+        adHocExpenses,
+      };
 
       try {
-        const res = await fetch(apiUrl, {
-          method: 'PUT',
+        const response = await fetch(apiUrl, {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "X-Master-Key": masterKey
+            "X-Master-Key": masterKey,
           },
-          body: JSON.stringify(data)
+          body: JSON.stringify(data),
         });
-        if(!res.ok) throw new Error(res.statusText);
-        alert('✅ Dane zostały zapisane!');
-      } catch (e) {
-        alert("❌ Błąd zapisu: " + e.message);
+        if (response.ok) {
+          alert("Dane zapisane pomyślnie.");
+        } else {
+          alert("Błąd podczas zapisu danych.");
+        }
+      } catch (error) {
+        alert("Nie udało się zapisać danych: " + error.message);
       }
-      updateSummary();
     }
+	async function loadData() {
+  try {
+    const response = await fetch(apiUrl + '/latest', {
+      headers: {
+        "X-Master-Key": masterKey
+      }
+    });
+    if (response.ok) {
+      const json = await response.json();
+      const data = json.record;
 
-    window.onload = loadData;
+      incomes = data.incomes || [];
+      fixedExpenses = data.fixedExpenses || [];
+      subscriptions = data.subscriptions || [];
+      adHocExpenses = data.adHocExpenses || [];
+
+      renderAll();
+      updateSummary();
+    } else {
+      console.error("Błąd ładowania danych:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Nie udało się załadować danych:", error);
+  }
+}
+
+    // Inicjalizacja strony
+
+   window.onload = () => {
+  loadData(); // załaduj dane z JSONBin przy starcie
+};
   </script>
-  <footer> 
+	<footer> 
 	<br><br></br></br>
     <center>&copy; 2025 Copyright by <b>Paweł Chrzan</b>,  Wszelkie prawa zastrzeżone!</center>
   </footer>

@@ -1,165 +1,164 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Budżet Domowy</title>
-  <style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Budżet Domowy</title>
+<style>
+  /* Stylizacja jak poprzednio */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1e1e1e;
+    color: #d4af37;
+    padding: 2rem;
+    max-width: 800px;
+    margin: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  section {
+    background: #2c2c2c;
+    padding: 1rem 2rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+    border: 1px solid #d4af37;
+  }
+  h1, h2 {
+    text-align: center;
+    color: #ffd966;
+    margin-bottom: 0.5rem;
+  }
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #ffd966;
+  }
+  input[type="number"], input[type="text"], select {
+    box-sizing: border-box;
+    padding: 0.5rem 0.8rem;
+    margin-top: 0.3rem;
+    border-radius: 6px;
+    border: 1px solid #d4af37;
+    background: #3b3b3b;
+    color: #ffd966;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  input[type="number"], input[type="text"] {
+    width: 60%;
+    max-width: 300px;
+  }
+  select {
+    width: auto;
+    min-width: 160px;
+  }
+  input[type="number"]:focus, input[type="text"]:focus, select:focus {
+    outline: none;
+    border-color: #ffd966;
+    background: #444;
+    color: #fff;
+  }
+  button {
+    margin-top: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: #d4af37;
+    color: #1e1e1e;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    vertical-align: middle;
+  }
+  button:hover {
+    background: #ffd966;
+    color: #1a1a1a;
+  }
+  .result {
+    font-size: 1.1rem;
+    font-weight: bold;
+    white-space: pre-wrap;
+    color: #fff3b0;
+    background: #3b3b3b;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #d4af37;
+    margin-top: 1rem;
+  }
+  ul {
+    padding-left: 1.5rem;
+    color: #f0d77a;
+    max-height: 150px;
+    overflow-y: auto;
+    margin-top: 0.5rem;
+    border: 1px solid #d4af37;
+    border-radius: 8px;
+    background: #3b3b3b;
+  }
+  .flex-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+  }
+  .flex-row input[type="text"] {
+    width: 40%;
+  }
+  .flex-row input[type="number"] {
+    width: 30%;
+  }
+  .expense-button {
+    background-color: #b22222;
+    color: white;
+    padding: 0.4rem 0.7rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    min-width: 70px;
+  }
+  /* Responsywność */
+  @media (max-width: 480px) {
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #1e1e1e;
-      color: #d4af37;
-      padding: 2rem;
-      max-width: 800px;
-      margin: auto;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      padding: 1rem;
     }
     section {
-      background: #2c2c2c;
-      padding: 1rem 2rem;
-      margin-bottom: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
-      border: 1px solid #d4af37;
-    }
-    h1, h2 {
-      text-align: center;
-      color: #ffd966;
-      margin-bottom: 0.5rem;
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 600;
-      color: #ffd966;
-    }
-    input[type="number"], input[type="text"], select {
-      box-sizing: border-box;
-      padding: 0.5rem 0.8rem;
-      margin-top: 0.3rem;
-      border-radius: 6px;
-      border: 1px solid #d4af37;
-      background: #3b3b3b;
-      color: #ffd966;
-      font-size: 1rem;
-      transition: border-color 0.3s ease;
-      display: inline-block;
-      vertical-align: middle;
-    }
-    input[type="number"], input[type="text"] {
-      width: 60%;
-      max-width: 300px;
-    }
-    select {
-      width: auto;
-      min-width: 160px;
-    }
-    input[type="number"]:focus, input[type="text"]:focus, select:focus {
-      outline: none;
-      border-color: #ffd966;
-      background: #444;
-      color: #fff;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
     }
     button {
-      margin-top: 0.5rem;
-      padding: 0.4rem 1rem;
-      background: #d4af37;
-      color: #1e1e1e;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 0.9rem;
-      transition: background-color 0.3s ease;
-      vertical-align: middle;
+      max-width: 100%;
     }
-    button:hover {
-      background: #ffd966;
-      color: #1a1a1a;
+    input[type="number"], input[type="text"] {
+      font-size: 1.1rem;
+      width: 100% !important;
+    }
+    label {
+      font-size: 1rem;
+    }
+    h1 {
+      font-size: 1.8rem;
+    }
+    h2 {
+      font-size: 1.4rem;
     }
     .result {
-      font-size: 1.1rem;
-      font-weight: bold;
-      white-space: pre-wrap;
-      color: #fff3b0;
-      background: #3b3b3b;
-      padding: 1rem;
-      border-radius: 8px;
-      border: 1px solid #d4af37;
-      margin-top: 1rem;
-    }
-    ul {
-      padding-left: 1.5rem;
-      color: #f0d77a;
-      max-height: 150px;
-      overflow-y: auto;
-      margin-top: 0.5rem;
-      border: 1px solid #d4af37;
-      border-radius: 8px;
-      background: #3b3b3b;
+      font-size: 1rem;
     }
     .flex-row {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-top: 0.6rem;
+      flex-direction: column;
+      align-items: flex-start;
     }
-    .flex-row input[type="text"] {
-      width: 40%;
+    .flex-row input[type="text"], .flex-row input[type="number"], .flex-row button {
+      width: 100% !important;
+      margin-top: 0.3rem;
     }
-    .flex-row input[type="number"] {
-      width: 30%;
-    }
-    .expense-button {
-      background-color: #b22222;
-      color: white;
-      padding: 0.4rem 0.7rem;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 0.8rem;
-      min-width: 70px;
-    }
-    /* Responsywność */
-    @media (max-width: 480px) {
-      body {
-        padding: 1rem;
-      }
-      section {
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-      }
-      button {
-        max-width: 100%;
-      }
-      input[type="number"], input[type="text"] {
-        font-size: 1.1rem;
-        width: 100% !important;
-      }
-      label {
-        font-size: 1rem;
-      }
-      h1 {
-        font-size: 1.8rem;
-      }
-      h2 {
-        font-size: 1.4rem;
-      }
-      .result {
-        font-size: 1rem;
-      }
-      .flex-row {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .flex-row input[type="text"], .flex-row input[type="number"], .flex-row button {
-        width: 100% !important;
-        margin-top: 0.3rem;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
   <h1>Budżet Domowy</h1>
@@ -221,37 +220,22 @@
   <script>
     const binId = "688a2a2c7b4b8670d8a9e071";
     const masterKey = "$2a$10$PrRx.RBOnJmEFTqQQLH/Tu8TXFwoNEI.j/XEFF19EYFYELKzSX9BC";
-    const apiUrl = `https://api.jsonbin.io/v3/b/${binId}`;
+    const apiUrl = `https://api.jsonbin.io/v3/b/${binId}/latest`;
 
-    // Początkowe dane
-    let incomes = [
-      { name: "Pensja", amount: 1500 },
-      { name: "800+", amount: 800 },
-    ];
-    let fixedExpenses = [
-      { name: "Internet", amount: 75 },
-      { name: "Prąd", amount: 350 },
-    ];
-    let subscriptions = [
-      { name: "Netflix", amount: 80 },
-      { name: "Apple", amount: 30 },
-    ];
-
+    let incomes = [];
+    let fixedExpenses = [];
+    let subscriptions = [];
     let adHocExpenses = [];
 
-    // Kategorie i podkategorie
     const options = {
       spozywka: ['Biedronka', 'Lidl', 'Żabka', 'Carrefour', 'Auchan'],
-      restauracje: ['McDonald\'s', 'KFC', 'Lokalna knajpa', 'Dowóz'],
-      paliwo: ['Orlen', 'BP', 'Shell'],
-      wakacje: ['Booking', 'Airbnb', 'LOT', 'Inne'],
-      inne: ['Brak podkategorii']
+      restauracje: ['McDonald\'s', 'KFC', 'Lokal', 'Kawiarnia', 'Inne'],
+      paliwo: ['Orlen', 'Shell', 'Statoil', 'BP'],
+      wakacje: ['Hotel', 'Bilety', 'Wycieczka', 'Inne'],
+      inne: ['Różne']
     };
 
-    // Funkcje dodawania nowych wpisów do list
-
-    function createInputRow(container, dataArray, index, type) {
-      // Tworzy wiersz inputów i przycisk usuwania
+    function createInputRow(container, dataArray, index) {
       const div = document.createElement("div");
       div.className = "flex-row";
 
@@ -261,6 +245,7 @@
       nameInput.placeholder = "Nazwa";
       nameInput.oninput = () => {
         dataArray[index].name = nameInput.value;
+        updateSummary();
       };
 
       const amountInput = document.createElement("input");
@@ -273,6 +258,7 @@
         let val = parseFloat(amountInput.value);
         if (isNaN(val) || val < 0) val = 0;
         dataArray[index].amount = val;
+        updateSummary();
       };
 
       const removeButton = document.createElement("button");
@@ -281,6 +267,7 @@
       removeButton.onclick = () => {
         dataArray.splice(index, 1);
         renderAll();
+        updateSummary();
       };
 
       div.appendChild(nameInput);
@@ -290,254 +277,202 @@
       container.appendChild(div);
     }
 
-    function renderIncomes() {
-      const container = document.getElementById("incomeList");
-      container.innerHTML = "";
-      incomes.forEach((_, i) => createInputRow(container, incomes, i, "income"));
+    function renderAll() {
+      const incomeList = document.getElementById("incomeList");
+      incomeList.innerHTML = "";
+      incomes.forEach((_, i) => createInputRow(incomeList, incomes, i));
+
+      const fixedExpensesList = document.getElementById("fixedExpensesList");
+      fixedExpensesList.innerHTML = "";
+      fixedExpenses.forEach((_, i) => createInputRow(fixedExpensesList, fixedExpenses, i));
+
+      const subscriptionsList = document.getElementById("subscriptionsList");
+      subscriptionsList.innerHTML = "";
+      subscriptions.forEach((_, i) => createInputRow(subscriptionsList, subscriptions, i));
+
+      renderAdHocExpenses();
+      updateSummary();
     }
 
-    function renderFixedExpenses() {
-      const container = document.getElementById("fixedExpensesList");
-      container.innerHTML = "";
-      fixedExpenses.forEach((_, i) => createInputRow(container, fixedExpenses, i, "fixed"));
+    function addIncome() {
+      incomes.push({ name: "", amount: 0 });
+      renderAll();
+      updateSummary();
+    }
+    function addFixedExpense() {
+      fixedExpenses.push({ name: "", amount: 0 });
+      renderAll();
+      updateSummary();
+    }
+    function addSubscription() {
+      subscriptions.push({ name: "", amount: 0 });
+      renderAll();
+      updateSummary();
     }
 
-    function renderSubscriptions() {
-      const container = document.getElementById("subscriptionsList");
-      container.innerHTML = "";
-      subscriptions.forEach((_, i) => createInputRow(container, subscriptions, i, "subs"));
-    }
+    function renderAdHocExpenses() {
+  const expenseList = document.getElementById("expenseList");
+  expenseList.innerHTML = "";
+  adHocExpenses.forEach((exp, index) => {
+    const li = document.createElement("li");
+    li.textContent = `${exp.category} - ${exp.subcategory ? exp.subcategory + ": " : ""}${exp.description || ""} - ${exp.amount.toFixed(2)} PLN`;
+    
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "Usuń";
+    removeBtn.className = "expense-button";
+    removeBtn.style.marginLeft = "1rem";
+    removeBtn.onclick = () => {
+      adHocExpenses.splice(index, 1);
+      renderAdHocExpenses();
+      updateSummary();
+    };
 
-    // Obsługa wydatków ad hoc
+    li.appendChild(removeBtn);
+    expenseList.appendChild(li);
+  });
+}
 
     function categoryChanged() {
-      const catSelect = document.getElementById("expenseCategory");
-      const subcatSelect = document.getElementById("expenseSubcategory");
-      const subcatLabel = document.getElementById("subcategoryLabel");
-      const selectedCategory = catSelect.value;
+      const category = document.getElementById("expenseCategory").value;
+      const subcategorySelect = document.getElementById("expenseSubcategory");
+      const subcategoryLabel = document.getElementById("subcategoryLabel");
 
-      if (!selectedCategory) {
-        subcatSelect.style.display = "none";
-        subcatLabel.style.display = "none";
-        subcatSelect.innerHTML = '<option value="">-- Wybierz podkategorię --</option>';
+      if (!category || !options[category]) {
+        subcategorySelect.style.display = "none";
+        subcategoryLabel.style.display = "none";
+        subcategorySelect.innerHTML = "";
         return;
       }
 
-      const subs = options[selectedCategory] || [];
-      if (subs.length === 1 && subs[0] === "Brak podkategorii") {
-        subcatSelect.style.display = "none";
-        subcatLabel.style.display = "none";
-        subcatSelect.innerHTML = '<option value="">-- Wybierz podkategorię --</option>';
-        return;
-      }
-
-      subcatSelect.style.display = "inline-block";
-      subcatLabel.style.display = "block";
-
-      // Wyczyść i dodaj nowe opcje
-      subcatSelect.innerHTML = '<option value="">-- Wybierz podkategorię --</option>';
+      const subs = options[category];
+      subcategorySelect.innerHTML = '<option value="">-- Wybierz podkategorię --</option>';
       subs.forEach(sub => {
         const opt = document.createElement("option");
         opt.value = sub;
         opt.textContent = sub;
-        subcatSelect.appendChild(opt);
+        subcategorySelect.appendChild(opt);
       });
+      subcategorySelect.style.display = "inline-block";
+      subcategoryLabel.style.display = "block";
     }
 
     function addExpense() {
       const category = document.getElementById("expenseCategory").value;
       const subcategory = document.getElementById("expenseSubcategory").value;
-      const descInput = document.getElementById("expenseDesc");
-      const amountInput = document.getElementById("expenseAmount");
+      const description = document.getElementById("expenseDesc").value.trim();
+      const amountStr = document.getElementById("expenseAmount").value;
 
       if (!category) {
-        alert("Wybierz kategorię.");
+        alert("Proszę wybrać kategorię.");
         return;
       }
-      if (document.getElementById("expenseSubcategory").style.display !== "none" && !subcategory) {
-        alert("Wybierz podkategorię.");
-        return;
-      }
-      let amount = parseFloat(amountInput.value);
+      const amount = parseFloat(amountStr);
       if (isNaN(amount) || amount <= 0) {
-        alert("Podaj poprawną kwotę.");
+        alert("Podaj poprawną kwotę wydatku.");
         return;
       }
 
-      // Opis jest opcjonalny
-      let desc = descInput.value.trim();
-      let fullDesc = "";
+      adHocExpenses.push({ category, subcategory, description, amount });
+      renderAdHocExpenses();
+      updateSummary();
 
-      if (desc) {
-        fullDesc = subcategory && subcategory !== '' ? `${category} > ${subcategory}: ${desc}` : `${category}: ${desc}`;
-      } else {
-        fullDesc = subcategory && subcategory !== '' ? `${category} > ${subcategory}` : `${category}`;
-      }
-
-      adHocExpenses.push({
-        category,
-        subcategory,
-        name: fullDesc,
-        amount
-      });
-
-      // Reset formularza
+      // reset inputy
       document.getElementById("expenseCategory").value = "";
-      categoryChanged(); // ukrywa/zeruje podkategorię
-      descInput.value = "";
-      amountInput.value = "";
-
-      renderExpenses();
-      updateSummary();
+      document.getElementById("expenseSubcategory").style.display = "none";
+      document.getElementById("subcategoryLabel").style.display = "none";
+      document.getElementById("expenseSubcategory").innerHTML = "";
+      document.getElementById("expenseDesc").value = "";
+      document.getElementById("expenseAmount").value = "";
     }
-
-    function renderExpenses() {
-      const list = document.getElementById("expenseList");
-      list.innerHTML = "";
-      adHocExpenses.forEach((exp, i) => {
-        const li = document.createElement("li");
-        li.textContent = `${exp.name} — ${exp.amount.toFixed(2)} zł `;
-
-        const removeBtn = document.createElement("button");
-        removeBtn.textContent = "Usuń";
-        removeBtn.className = "expense-button";
-        removeBtn.onclick = () => {
-          adHocExpenses.splice(i, 1);
-          renderExpenses();
-          updateSummary();
-        };
-        li.appendChild(removeBtn);
-
-        list.appendChild(li);
-      });
-    }
-
-    // Dodawanie pozycji do list
-
-    function addIncome() {
-      incomes.push({ name: "", amount: 0 });
-      renderIncomes();
-      updateSummary();
-    }
-
-    function addFixedExpense() {
-      fixedExpenses.push({ name: "", amount: 0 });
-      renderFixedExpenses();
-      updateSummary();
-    }
-
-    function addSubscription() {
-      subscriptions.push({ name: "", amount: 0 });
-      renderSubscriptions();
-      updateSummary();
-    }
-
-    // Podsumowanie
-
-    function updateSummary() {
-      const totalIncome = incomes.reduce((acc, val) => acc + val.amount, 0);
-      const totalFixed = fixedExpenses.reduce((acc, val) => acc + val.amount, 0);
-      const totalSubs = subscriptions.reduce((acc, val) => acc + val.amount, 0);
-      const totalAdHoc = adHocExpenses.reduce((acc, val) => acc + val.amount, 0);
-
-      const balance = totalIncome - (totalFixed + totalSubs + totalAdHoc);
-
-      let text = `Wpływy: ${totalIncome.toFixed(2)} zł\n`;
-      text += `Wydatki stałe: ${totalFixed.toFixed(2)} zł\n`;
-      text += `Subskrypcje: ${totalSubs.toFixed(2)} zł\n`;
-      text += `Wydatki ad hoc: ${totalAdHoc.toFixed(2)} zł\n`;
-      text += `---------------------------------\n`;
-      text += `Saldo: ${balance.toFixed(2)} zł\n`;
-
-      document.getElementById("summaryText").textContent = text;
-    }
-
-    // Resetowanie danych
 
     function resetBin() {
-      if (confirm("Na pewno chcesz wyczyścić wszystkie dane?")) {
+      if (confirm("Czy na pewno chcesz zresetować wszystkie dane?")) {
         incomes = [];
         fixedExpenses = [];
         subscriptions = [];
         adHocExpenses = [];
         renderAll();
         updateSummary();
-        alert("Dane zostały wyczyszczone.");
       }
     }
 
-    // Renderowanie wszystkiego
+    function updateSummary() {
+      const totalIncome = incomes.reduce((acc, i) => acc + i.amount, 0);
+      const totalFixed = fixedExpenses.reduce((acc, e) => acc + e.amount, 0);
+      const totalSubs = subscriptions.reduce((acc, s) => acc + s.amount, 0);
+      const totalAdHoc = adHocExpenses.reduce((acc, a) => acc + a.amount, 0);
+      const totalExpenses = totalFixed + totalSubs + totalAdHoc;
+      const balance = totalIncome - totalExpenses;
 
-    function renderAll() {
-      renderIncomes();
-      renderFixedExpenses();
-      renderSubscriptions();
-      renderExpenses();
+      let summaryText = `Suma wpływów: ${totalIncome.toFixed(2)} PLN\n`;
+      summaryText += `Wydatki stałe: ${totalFixed.toFixed(2)} PLN\n`;
+      summaryText += `Subskrypcje: ${totalSubs.toFixed(2)} PLN\n`;
+      summaryText += `Wydatki ad hoc: ${totalAdHoc.toFixed(2)} PLN\n`;
+      summaryText += `----------------------------\n`;
+      summaryText += `Saldo: ${balance.toFixed(2)} PLN`;
+
+      const summaryElem = document.getElementById("summaryText");
+      summaryElem.textContent = summaryText;
     }
-
-    // Zapis danych do jsonbin.io
 
     async function saveData() {
       const data = {
         incomes,
         fixedExpenses,
         subscriptions,
-        adHocExpenses,
+        adHocExpenses
       };
 
       try {
-        const response = await fetch(apiUrl, {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             "X-Master-Key": masterKey,
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(data)
         });
+
         if (response.ok) {
-          alert("Dane zapisane pomyślnie.");
+          alert("Dane zostały zapisane pomyślnie!");
         } else {
           alert("Błąd podczas zapisu danych.");
         }
       } catch (error) {
-        alert("Nie udało się zapisać danych: " + error.message);
+        alert("Błąd połączenia: " + error);
       }
     }
-	async function loadData() {
-  try {
-    const response = await fetch(apiUrl + '/latest', {
-      headers: {
-        "X-Master-Key": masterKey
+
+    async function loadData() {
+      try {
+        const response = await fetch(apiUrl, {
+          headers: {
+            "X-Master-Key": masterKey,
+          }
+        });
+        if (!response.ok) throw new Error(`Błąd sieci: ${response.status}`);
+
+        const json = await response.json();
+        if (json && json.record) {
+          incomes = json.record.incomes || [];
+          fixedExpenses = json.record.fixedExpenses || [];
+          subscriptions = json.record.subscriptions || [];
+          adHocExpenses = json.record.adHocExpenses || [];
+        }
+      } catch (err) {
+        console.warn("Nie udało się wczytać danych:", err);
+      } finally {
+        renderAll();
       }
-    });
-    if (response.ok) {
-      const json = await response.json();
-      const data = json.record;
-
-      incomes = data.incomes || [];
-      fixedExpenses = data.fixedExpenses || [];
-      subscriptions = data.subscriptions || [];
-      adHocExpenses = data.adHocExpenses || [];
-
-      renderAll();
-      updateSummary();
-    } else {
-      console.error("Błąd ładowania danych:", response.statusText);
     }
-  } catch (error) {
-    console.error("Nie udało się załadować danych:", error);
-  }
-}
 
-    // Inicjalizacja strony
-
-   window.onload = () => {
-  loadData(); // załaduj dane z JSONBin przy starcie
-};
+    // Ładujemy dane przy starcie strony
+    window.onload = loadData;
   </script>
 	<footer> 
 	<br><br></br></br>
     <center>&copy; 2025 Copyright by <b>Paweł Chrzan</b>,  Wszelkie prawa zastrzeżone!</center>
   </footer>
+
 </body>
 </html>

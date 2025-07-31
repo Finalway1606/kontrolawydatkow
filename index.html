@@ -399,6 +399,13 @@
     cursor: pointer;
     transition: all 0.3s ease;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+  }
+
+  .tab i {
+    margin-right: 0.5rem;
+    font-size: 1rem;
   }
 
   .tab.active {
@@ -618,11 +625,11 @@
 
     <!-- Nawigacja zakładek -->
     <div class="tabs">
-      <div class="tab active" data-tab="income">Wpływy</div>
-      <div class="tab" data-tab="fixed-expenses">Wydatki stałe</div>
-      <div class="tab" data-tab="subscriptions">Subskrypcje</div>
-      <div class="tab" data-tab="ad-hoc">Wydatki ad hoc</div>
-      <div class="tab" data-tab="summary">Podsumowanie</div>
+      <div class="tab active" data-tab="income"><i class="fas fa-wallet"></i> Wpływy</div>
+      <div class="tab" data-tab="fixed-expenses"><i class="fas fa-home"></i> Wydatki stałe</div>
+      <div class="tab" data-tab="subscriptions"><i class="fas fa-sync-alt"></i> Subskrypcje</div>
+      <div class="tab" data-tab="ad-hoc"><i class="fas fa-shopping-cart"></i> Wydatki ad hoc</div>
+      <div class="tab" data-tab="summary"><i class="fas fa-chart-pie"></i> Podsumowanie</div>
     </div>
 
     <!-- Zakładka Wpływy -->
@@ -693,14 +700,12 @@
     <div class="tab-content" id="summary-tab">
       <div class="card">
         <h2><i class="fas fa-chart-pie"></i> Podsumowanie</h2>
-        <p id="summaryText" class="result"></p>
+        <div id="summaryText" class="result"></div>
 
-        <h3><i class="fas fa-list"></i> Wydatki ad hoc:</h3>
+        <h3><i class="fas fa-receipt"></i> Wydatki ad hoc:</h3>
         <div class="expense-list" id="expenseList"></div>
 
-        <div class="chart-container" id="chartContainer">
-          <!-- Wykres będzie generowany przez JavaScript -->
-        </div>
+        <!-- Usunięto wykres kołowy -->
 
         <button class="btn btn-danger" onclick="resetBin()"><i class="fas fa-trash"></i> Resetuj dane (ostrzeżenie!)</button>
       </div>
@@ -740,7 +745,9 @@
       inne: ['Różne']
     };
 
-    // Obsługa zakładek
+    // Obsługa zakładek z animacją liczb
+    let tabsInitialized = {};
+    
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -748,7 +755,13 @@
         
         tab.classList.add('active');
         const tabId = tab.getAttribute('data-tab');
-        document.getElementById(`${tabId}-tab`).classList.add('active');
+        const tabContent = document.getElementById(`${tabId}-tab`);
+        tabContent.classList.add('active');
+        
+        // Oznaczamy zakładkę jako zainicjalizowaną, ale nie animujemy liczb przy zmianie zakładek
+        if (!tabsInitialized[tabId]) {
+          tabsInitialized[tabId] = true;
+        }
       });
     });
 
@@ -814,7 +827,6 @@
       renderAdHocExpenses();
       updateSummary();
       updateDashboard();
-      renderChart();
     }
 
     function addIncome() {
@@ -852,9 +864,13 @@
         const details = document.createElement("div");
         details.className = "expense-item-details";
         
+        // Używamy kategorii dokładnie takiej, jaka jest w danych, ale dla wyświetlania
+        // zmieniamy pierwszą literę na wielką dla lepszego wyglądu
+        const displayCategory = exp.category.charAt(0).toUpperCase() + exp.category.slice(1);
+        
         const category = document.createElement("span");
         category.className = "expense-item-category";
-        category.textContent = exp.category;
+        category.textContent = displayCategory;
         
         const subcategory = document.createElement("span");
         subcategory.className = "expense-item-subcategory";
@@ -882,7 +898,6 @@
           renderAdHocExpenses();
           updateSummary();
           updateDashboard();
-          renderChart();
           showNotification('Wydatek został usunięty', 'success');
         };
         
@@ -919,7 +934,7 @@
     }
 
     function addExpense() {
-      const category = document.getElementById("expenseCategory").value;
+      let category = document.getElementById("expenseCategory").value;
       const subcategory = document.getElementById("expenseSubcategory").value;
       const description = document.getElementById("expenseDesc").value.trim();
       const amountStr = document.getElementById("expenseAmount").value;
@@ -933,12 +948,14 @@
         showNotification('Podaj poprawną kwotę wydatku', 'error');
         return;
       }
+      
+      // Nie normalizujemy nazwy kategorii, używamy dokładnie takiej, jaka jest w formularzu
+      // Formularz już używa nazw z małej litery (spozywka, restauracje, itp.)
 
       adHocExpenses.push({ category, subcategory, description, amount });
       renderAdHocExpenses();
       updateSummary();
       updateDashboard();
-      renderChart();
       showNotification('Dodano nowy wydatek', 'success');
 
       // reset inputy
@@ -958,7 +975,6 @@
         renderAll();
         updateSummary();
         updateDashboard();
-        renderChart();
         showNotification('Wszystkie dane zostały zresetowane', 'success');
       }
     }
@@ -971,14 +987,126 @@
       const totalExpenses = totalFixed + totalSubs + totalAdHoc;
       const balance = totalIncome - totalExpenses;
 
-      let summaryText = `Suma wpływów: ${totalIncome.toFixed(2)} PLN\n`;
-      summaryText += `Wydatki stałe: ${totalFixed.toFixed(2)} PLN\n`;
-      summaryText += `Subskrypcje: ${totalSubs.toFixed(2)} PLN\n`;
-      summaryText += `Wydatki ad hoc: ${totalAdHoc.toFixed(2)} PLN\n`;
-      summaryText += `----------------------------\n`;
-      summaryText += `Saldo: ${balance.toFixed(2)} PLN\n`;
+      // Tworzenie elementu div zamiast zwykłego tekstu
+      const summaryDiv = document.createElement('div');
+      summaryDiv.className = 'summary-content';
+      
+      // Dodanie stylów dla podsumowania, jeśli jeszcze nie istnieją
+      if (!document.getElementById('summary-styles')) {
+        const style = document.createElement('style');
+        style.id = 'summary-styles';
+        style.textContent = `
+          .summary-content {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.8;
+            margin-bottom: 20px;
+          }
+          .summary-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 16px;
+          }
+          .summary-icon {
+            margin-right: 10px;
+            font-size: 20px;
+            width: 30px;
+            text-align: center;
+          }
+          .summary-value {
+            font-weight: 600;
+            margin-left: auto;
+          }
+          .summary-divider {
+            height: 2px;
+            background: linear-gradient(to right, var(--primary-light), var(--accent));
+            margin: 15px 0;
+            border-radius: 2px;
+          }
+          .summary-balance {
+            font-size: 18px;
+            font-weight: 700;
+          }
+          .summary-category {
+            margin-top: 15px;
+            font-weight: 600;
+            color: var(--primary);
+          }
+          .summary-subcategory {
+            margin-left: 40px;
+            display: flex;
+            align-items: center;
+          }
+          .summary-subcategory-icon {
+            margin-right: 8px;
+            color: var(--accent);
+          }
+          .positive-balance {
+            color: var(--success);
+          }
+          .negative-balance {
+            color: var(--danger);
+          }
+        `;
+        document.head.appendChild(style);
+      }
 
-      // 🔽 Podsumowanie ad hoc: kategoria → podkategoria → suma
+      // Główne podsumowanie
+      const addSummaryItem = (icon, text, value) => {
+        const item = document.createElement('div');
+        item.className = 'summary-item';
+        
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'summary-icon';
+        iconSpan.innerHTML = icon;
+        
+        const textSpan = document.createElement('span');
+        textSpan.textContent = text;
+        
+        const valueSpan = document.createElement('span');
+        valueSpan.className = 'summary-value';
+        valueSpan.textContent = `${value.toFixed(2)} PLN`;
+        
+        item.appendChild(iconSpan);
+        item.appendChild(textSpan);
+        item.appendChild(valueSpan);
+        
+        return item;
+      };
+
+      // Dodanie głównych pozycji
+      summaryDiv.appendChild(addSummaryItem('💰', 'Suma wpływów:', totalIncome));
+      summaryDiv.appendChild(addSummaryItem('🏠', 'Wydatki stałe:', totalFixed));
+      summaryDiv.appendChild(addSummaryItem('🔄', 'Subskrypcje:', totalSubs));
+      summaryDiv.appendChild(addSummaryItem('🛒', 'Wydatki ad hoc:', totalAdHoc));
+      
+      // Dodanie separatora
+      const divider = document.createElement('div');
+      divider.className = 'summary-divider';
+      summaryDiv.appendChild(divider);
+      
+      // Dodanie salda
+      const balanceItem = document.createElement('div');
+      balanceItem.className = 'summary-item summary-balance';
+      
+      const balanceIcon = document.createElement('span');
+      balanceIcon.className = 'summary-icon';
+      balanceIcon.innerHTML = balance >= 0 ? '✅' : '⚠️';
+      
+      const balanceText = document.createElement('span');
+      balanceText.textContent = 'Saldo:';
+      
+      const balanceValue = document.createElement('span');
+      balanceValue.className = `summary-value ${balance >= 0 ? 'positive-balance' : 'negative-balance'}`;
+      balanceValue.textContent = `${balance.toFixed(2)} PLN`;
+      
+      balanceItem.appendChild(balanceIcon);
+      balanceItem.appendChild(balanceText);
+      balanceItem.appendChild(balanceValue);
+      
+      summaryDiv.appendChild(balanceItem);
+
+      // Grupowanie wydatków ad hoc
       const grouped = {};
 
       adHocExpenses.forEach(({ category, subcategory, amount }) => {
@@ -988,101 +1116,144 @@
         grouped[category][sub] += amount;
       });
 
+      // Dodanie szczegółów wydatków ad hoc
       if (Object.keys(grouped).length > 0) {
-        summaryText += `\n💡 Szczegóły wydatków ad hoc:\n`;
+        const adHocTitle = document.createElement('div');
+        adHocTitle.className = 'summary-item';
+        adHocTitle.style.marginTop = '20px';
+        
+        const adHocIcon = document.createElement('span');
+        adHocIcon.className = 'summary-icon';
+        adHocIcon.innerHTML = '📊';
+        
+        const adHocText = document.createElement('span');
+        adHocText.style.fontWeight = '600';
+        adHocText.textContent = 'Szczegóły wydatków ad hoc:';
+        
+        adHocTitle.appendChild(adHocIcon);
+        adHocTitle.appendChild(adHocText);
+        
+        summaryDiv.appendChild(adHocTitle);
+        
+        // Emotikony dla kategorii
+        const categoryIcons = {
+          'spozywka': '🍎',
+          'restauracje': '🍽️',
+          'paliwo': '⛽',
+          'wakacje': '🏖️',
+          'inne': '📦'
+        };
+        
+        // Dodanie kategorii i podkategorii
         for (const category in grouped) {
-          summaryText += `\n📁 ${category}:\n`;
+          const categoryItem = document.createElement('div');
+          categoryItem.className = 'summary-category';
+          
+          const categoryIcon = document.createElement('span');
+          categoryIcon.className = 'summary-icon';
+          categoryIcon.innerHTML = categoryIcons[category.toLowerCase()] || '📁';
+          
+          const categoryText = document.createElement('span');
+          categoryText.textContent = category;
+          
+          categoryItem.appendChild(categoryIcon);
+          categoryItem.appendChild(categoryText);
+          
+          summaryDiv.appendChild(categoryItem);
+          
+          // Dodanie podkategorii
           for (const sub in grouped[category]) {
-            summaryText += `   ➤ ${sub}: ${grouped[category][sub].toFixed(2)} PLN\n`;
+            const subItem = document.createElement('div');
+            subItem.className = 'summary-subcategory';
+            
+            const subIcon = document.createElement('span');
+            subIcon.className = 'summary-subcategory-icon';
+            subIcon.innerHTML = '➤';
+            
+            const subText = document.createElement('span');
+            subText.textContent = sub;
+            
+            const subValue = document.createElement('span');
+            subValue.className = 'summary-value';
+            subValue.textContent = `${grouped[category][sub].toFixed(2)} PLN`;
+            
+            subItem.appendChild(subIcon);
+            subItem.appendChild(subText);
+            subItem.appendChild(subValue);
+            
+            summaryDiv.appendChild(subItem);
           }
         }
       }
 
-      document.getElementById("summaryText").textContent = summaryText;
+      // Zastąpienie zawartości elementu summaryText
+      const summaryTextElement = document.getElementById("summaryText");
+      summaryTextElement.innerHTML = '';
+      summaryTextElement.appendChild(summaryDiv);
     }
 
-    function updateDashboard() {
-      const totalIncome = incomes.reduce((acc, i) => acc + i.amount, 0);
-      const totalFixed = fixedExpenses.reduce((acc, e) => acc + e.amount, 0);
-      const totalSubs = subscriptions.reduce((acc, s) => acc + s.amount, 0);
-      const totalAdHoc = adHocExpenses.reduce((acc, a) => acc + a.amount, 0);
-      const totalExpenses = totalFixed + totalSubs + totalAdHoc;
+    function updateDashboard(animate = false, isFirstLoad = false) {
+      const totalIncome = incomes.reduce((sum, income) => sum + parseFloat(income.amount), 0);
+      const totalFixedExpenses = fixedExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount), 0);
+      const totalSubscriptions = subscriptions.reduce((sum, subscription) => sum + parseFloat(subscription.amount), 0);
+      const totalAdHocExpenses = adHocExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount), 0);
+      const totalExpenses = totalFixedExpenses + totalSubscriptions + totalAdHocExpenses;
       const balance = totalIncome - totalExpenses;
 
-      document.getElementById("dashboardIncome").textContent = `${totalIncome.toFixed(2)} PLN`;
-      document.getElementById("dashboardExpenses").textContent = `${totalExpenses.toFixed(2)} PLN`;
-      document.getElementById("dashboardBalance").textContent = `${balance.toFixed(2)} PLN`;
-
-      // Dodaj klasę pulse do salda jeśli jest ujemne
+      const incomeElement = document.getElementById("dashboardIncome");
+      const expensesElement = document.getElementById("dashboardExpenses");
       const balanceElement = document.getElementById("dashboardBalance");
-      if (balance < 0) {
-        balanceElement.classList.add("pulse");
-        balanceElement.style.color = "var(--danger)";
+
+      // Funkcja do animacji liczb z efektem easing
+      function animateValue(element, start, end, duration) {
+        let startTimestamp = null;
+        
+        // Funkcja easing - powolny start, szybki środek, powolny koniec
+        const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        
+        const step = (timestamp) => {
+          if (!startTimestamp) startTimestamp = timestamp;
+          const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+          
+          // Zastosowanie funkcji easing dla bardziej naturalnej animacji
+          const easedProgress = easeInOutCubic(progress);
+          const currentValue = easedProgress * (end - start) + start;
+          
+          element.textContent = `${currentValue.toFixed(2)} PLN`;
+          if (progress < 1) {
+            window.requestAnimationFrame(step);
+          } else {
+            element.textContent = `${end.toFixed(2)} PLN`;
+          }
+        };
+        window.requestAnimationFrame(step);
+      }
+
+      if (animate) {
+        // Animuj liczby od 0 do faktycznej wartości
+        // Przy pierwszym ładowaniu strony animacja jest wolniejsza (2500ms)
+        const duration = isFirstLoad ? 2500 : 1000;
+        animateValue(incomeElement, 0, totalIncome, duration);
+        animateValue(expensesElement, 0, totalExpenses, duration);
+        animateValue(balanceElement, 0, balance, duration);
       } else {
-        balanceElement.classList.remove("pulse");
-        balanceElement.style.color = "var(--success)";
+        // Bez animacji - natychmiastowa aktualizacja
+        incomeElement.textContent = `${totalIncome.toFixed(2)} PLN`;
+        expensesElement.textContent = `${totalExpenses.toFixed(2)} PLN`;
+        balanceElement.textContent = `${balance.toFixed(2)} PLN`;
+      }
+
+      // Aktualizacja kolorów salda
+      if (balance < 0) {
+        balanceElement.classList.add('negative');
+        balanceElement.classList.remove('positive');
+      } else {
+        balanceElement.classList.add('positive');
+        balanceElement.classList.remove('negative');
       }
     }
 
-    function renderChart() {
-      const chartContainer = document.getElementById('chartContainer');
-      chartContainer.innerHTML = '';
-      
-      // Grupowanie wydatków według kategorii
-      const categoryTotals = {};
-      adHocExpenses.forEach(exp => {
-        if (!categoryTotals[exp.category]) categoryTotals[exp.category] = 0;
-        categoryTotals[exp.category] += exp.amount;
-      });
-      
-      // Znajdź maksymalną wartość dla skalowania wykresu
-      const maxValue = Math.max(...Object.values(categoryTotals), 1);
-      
-      // Szerokość słupka i odstęp
-      const barWidth = 40;
-      const barGap = 20;
-      const totalWidth = Object.keys(categoryTotals).length * (barWidth + barGap);
-      
-      // Centrowanie wykresu
-      const startX = (chartContainer.offsetWidth - totalWidth) / 2;
-      
-      // Tworzenie słupków
-      let index = 0;
-      for (const category in categoryTotals) {
-        const value = categoryTotals[category];
-        const height = (value / maxValue) * 250; // Maksymalna wysokość 250px
-        
-        const bar = document.createElement('div');
-        bar.className = 'chart-bar';
-        bar.style.height = `${height}px`;
-        bar.style.left = `${startX + index * (barWidth + barGap)}px`;
-        
-        // Tooltip z wartością
-        bar.addEventListener('mouseenter', (e) => {
-          const tooltip = document.createElement('div');
-          tooltip.className = 'tooltip';
-          tooltip.textContent = `${category}: ${value.toFixed(2)} PLN`;
-          tooltip.style.left = `${e.pageX}px`;
-          tooltip.style.top = `${e.pageY - 30}px`;
-          tooltip.style.opacity = '1';
-          document.body.appendChild(tooltip);
-          
-          bar.addEventListener('mouseleave', () => {
-            tooltip.remove();
-          });
-        });
-        
-        const label = document.createElement('div');
-        label.className = 'chart-label';
-        label.textContent = category;
-        label.style.left = `${startX + index * (barWidth + barGap)}px`;
-        
-        chartContainer.appendChild(bar);
-        chartContainer.appendChild(label);
-        
-        index++;
-      }
-    }
+    // Funkcja renderChart została usunięta
 
     function showNotification(message, type) {
       const notification = document.getElementById('notification');
@@ -1155,8 +1326,64 @@
       }
     }
 
-    // Ładujemy dane przy starcie strony
-    window.onload = loadData;
+    // Dodanie przykładowych danych testowych
+    function addTestData() {
+      // Dodaj przykładowe wydatki ad hoc z różnymi kategoriami
+      adHocExpenses = [
+        { category: 'spozywka', subcategory: 'Biedronka', description: 'Zakupy spożywcze', amount: 120.50 },
+        { category: 'spozywka', subcategory: 'Lidl', description: 'Zakupy weekendowe', amount: 85.30 },
+        { category: 'restauracje', subcategory: 'McDonald\'s', description: 'Obiad', amount: 45.00 },
+        { category: 'restauracje', subcategory: 'Kawiarnia', description: 'Kawa z przyjaciółmi', amount: 35.50 },
+        { category: 'paliwo', subcategory: 'Orlen', description: 'Tankowanie', amount: 250.00 },
+        { category: 'wakacje', subcategory: 'Hotel', description: 'Rezerwacja hotelu', amount: 500.00 },
+        { category: 'inne', subcategory: 'Różne', description: 'Drobne wydatki', amount: 75.20 }
+      ];
+      
+      // Aktualizuj interfejs po dodaniu danych testowych
+      renderAll();
+      showNotification('Dodano przykładowe dane testowe');
+      
+      // Dodaj przykładowe wpływy
+      incomes = [
+        { name: 'Wynagrodzenie', amount: 5000.00 },
+        { name: 'Premia', amount: 1000.00 }
+      ];
+      
+      // Dodaj przykładowe wydatki stałe
+      fixedExpenses = [
+        { name: 'Czynsz', amount: 1500.00 },
+        { name: 'Prąd', amount: 200.00 },
+        { name: 'Internet', amount: 80.00 }
+      ];
+      
+      // Dodaj przykładowe subskrypcje
+      subscriptions = [
+        { name: 'Netflix', amount: 55.00 },
+        { name: 'Spotify', amount: 19.99 },
+        { name: 'Siłownia', amount: 100.00 }
+      ];
+      
+      renderAll();
+      updateSummary();
+      updateDashboard(true, true);
+      showNotification('Dodano przykładowe dane testowe', 'success');
+    }
+    
+    // Ładujemy dane przy starcie strony z animacją liczb
+    window.onload = async function() {
+      await loadData();
+      // Jeśli nie ma żadnych danych, dodaj przykładowe dane testowe
+      if (incomes.length === 0 && fixedExpenses.length === 0 && 
+          subscriptions.length === 0 && adHocExpenses.length === 0) {
+        addTestData();
+      } else {
+        // Animuj liczby przy pierwszym załadowaniu strony (wolniejsza animacja)
+        updateDashboard(true, true);
+      }
+      // Oznacz aktywną zakładkę jako zainicjalizowaną
+      const activeTabId = document.querySelector('.tab.active').getAttribute('data-tab');
+      tabsInitialized[activeTabId] = true;
+    };
   </script>
 </body>
 </html>

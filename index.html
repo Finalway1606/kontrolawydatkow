@@ -229,7 +229,7 @@
 
     const options = {
       spozywka: ['Biedronka', 'Lidl', 'Żabka', 'Carrefour', 'Auchan'],
-      restauracje: ['McDonald\'s', 'KFC', 'Lokal', 'Kawiarnia', 'Inne', 'Dowóz'],
+      restauracje: ['McDonald\'s', 'KFC', 'Lokal', 'Kawiarnia', 'Dowóz', 'Inne'],
       paliwo: ['Orlen', 'Shell', 'Statoil', 'BP'],
       wakacje: ['Hotel', 'Bilety', 'Wycieczka', 'Inne'],
       inne: ['Różne']
@@ -397,23 +397,42 @@
     }
 
     function updateSummary() {
-      const totalIncome = incomes.reduce((acc, i) => acc + i.amount, 0);
-      const totalFixed = fixedExpenses.reduce((acc, e) => acc + e.amount, 0);
-      const totalSubs = subscriptions.reduce((acc, s) => acc + s.amount, 0);
-      const totalAdHoc = adHocExpenses.reduce((acc, a) => acc + a.amount, 0);
-      const totalExpenses = totalFixed + totalSubs + totalAdHoc;
-      const balance = totalIncome - totalExpenses;
+  const totalIncome = incomes.reduce((acc, i) => acc + i.amount, 0);
+  const totalFixed = fixedExpenses.reduce((acc, e) => acc + e.amount, 0);
+  const totalSubs = subscriptions.reduce((acc, s) => acc + s.amount, 0);
+  const totalAdHoc = adHocExpenses.reduce((acc, a) => acc + a.amount, 0);
+  const totalExpenses = totalFixed + totalSubs + totalAdHoc;
+  const balance = totalIncome - totalExpenses;
 
-      let summaryText = `Suma wpływów: ${totalIncome.toFixed(2)} PLN\n`;
-      summaryText += `Wydatki stałe: ${totalFixed.toFixed(2)} PLN\n`;
-      summaryText += `Subskrypcje: ${totalSubs.toFixed(2)} PLN\n`;
-      summaryText += `Wydatki ad hoc: ${totalAdHoc.toFixed(2)} PLN\n`;
-      summaryText += `----------------------------\n`;
-      summaryText += `Saldo: ${balance.toFixed(2)} PLN`;
+  let summaryText = `Suma wpływów: ${totalIncome.toFixed(2)} PLN\n`;
+  summaryText += `Wydatki stałe: ${totalFixed.toFixed(2)} PLN\n`;
+  summaryText += `Subskrypcje: ${totalSubs.toFixed(2)} PLN\n`;
+  summaryText += `Wydatki ad hoc: ${totalAdHoc.toFixed(2)} PLN\n`;
+  summaryText += `----------------------------\n`;
+  summaryText += `Saldo: ${balance.toFixed(2)} PLN\n`;
 
-      const summaryElem = document.getElementById("summaryText");
-      summaryElem.textContent = summaryText;
+  // 🔽 Podsumowanie ad hoc: kategoria → podkategoria → suma
+  const grouped = {};
+
+  adHocExpenses.forEach(({ category, subcategory, amount }) => {
+    if (!grouped[category]) grouped[category] = {};
+    const sub = subcategory || "Brak podkategorii";
+    if (!grouped[category][sub]) grouped[category][sub] = 0;
+    grouped[category][sub] += amount;
+  });
+
+  if (Object.keys(grouped).length > 0) {
+    summaryText += `\n💡 Szczegóły wydatków ad hoc:\n`;
+    for (const category in grouped) {
+      summaryText += `\n📁 ${category}:\n`;
+      for (const sub in grouped[category]) {
+        summaryText += `   ➤ ${sub}: ${grouped[category][sub].toFixed(2)} PLN\n`;
+      }
     }
+  }
+
+  document.getElementById("summaryText").textContent = summaryText;
+}
 
     async function saveData() {
       const data = {

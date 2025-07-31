@@ -198,16 +198,16 @@
     <select id="expenseCategory" onchange="categoryChanged()">
       <option value="">-- Wybierz kategorię --</option>
       <option value="spozywka">Spożywka</option>
-      <option value="zarcie">Żarcie na dowóz</option>
-      <option value="przyjemnosci">Przyjemności</option>
+	  <option value="restauracje">Restauracje</option>
+	  <option value="paliwo">Paliwo</option>
+	  <option value="wakacje">Wakacje</option>
+	  <option value="inne">Inne</option>
     </select>
 
     <label id="subcategoryLabel" style="display:none; margin-top: 1rem;" for="expenseSubcategory">Podkategoria:</label>
     <select id="expenseSubcategory" style="display:none;">
-      <option value="">-- Wybierz podkategorię --</option>
-      <option value="zabka">Żabka</option>
-      <option value="auchan">Auchan</option>
-    </select>
+		<option value="">-- Wybierz podkategorię --</option>
+	</select>
 
     <label for="expenseDesc">Opis wydatku:</label>
     <input type="text" id="expenseDesc" />
@@ -220,7 +220,18 @@
     <h2>Podsumowanie</h2>
     <p id="summaryText" class="result"></p>
     <h3>Wydatki ad hoc:</h3>
-    <ul id="expenseList"></ul>
+    <table id="expenseList" style="width:100%; margin-top: 1rem; border-collapse: collapse; color: #fff3b0;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding: 0.5rem;">Kategoria</th>
+      <th style="text-align:left; padding: 0.5rem;">Podkategoria</th>
+      <th style="text-align:left; padding: 0.5rem;">Opis</th>
+      <th style="text-align:right; padding: 0.5rem;">Kwota</th>
+      <th style="text-align:center; padding: 0.5rem;">Usuń</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
     <button onclick="resetBin()">🧹 Resetuj dane (ostrzeżenie!)</button>
   </section>
 
@@ -253,18 +264,34 @@
     };
 
     function categoryChanged() {
-      const cat = document.getElementById('expenseCategory').value;
-      const subcatLabel = document.getElementById('subcategoryLabel');
-      const subcatSelect = document.getElementById('expenseSubcategory');
-      if(cat === 'spozywka') {
-        subcatLabel.style.display = 'block';
-        subcatSelect.style.display = 'block';
-      } else {
-        subcatLabel.style.display = 'none';
-        subcatSelect.style.display = 'none';
-        subcatSelect.value = "";
-      }
-    }
+  const cat = document.getElementById('expenseCategory').value;
+  const subcatSelect = document.getElementById('expenseSubcategory');
+  const subcatLabel = document.getElementById('subcategoryLabel');
+
+  const options = {
+    spozywka: ['Biedronka', 'Lidl', 'Żabka', 'Carrefour', 'Auchan'],
+    restauracje: ['McDonald\'s', 'KFC', 'Lokalna knajpa', 'Dowóz'],
+    paliwo: ['Orlen', 'BP', 'Shell'],
+    wakacje: ['Booking', 'Airbnb', 'LOT', 'Inne'],
+    inne: ['Brak podkategorii']
+  };
+
+  if (options[cat]) {
+    subcatLabel.style.display = 'block';
+    subcatSelect.style.display = 'block';
+    subcatSelect.innerHTML = '<option value="">-- Wybierz podkategorię --</option>';
+    options[cat].forEach(sub => {
+      const opt = document.createElement('option');
+      opt.value = sub;
+      opt.textContent = sub;
+      subcatSelect.appendChild(opt);
+    });
+  } else {
+    subcatLabel.style.display = 'none';
+    subcatSelect.style.display = 'none';
+    subcatSelect.innerHTML = '';
+  }
+}
 
     async function loadData() {
       try {
@@ -304,37 +331,54 @@
     }
 
     function updateExpenseList() {
-      const ul = document.getElementById('expenseList');
-      ul.innerHTML = '';
-      (data.expenses || []).forEach((e, index) => {
-        const li = document.createElement('li');
-        li.style.marginBottom = '0.5rem';
+  const table = document.getElementById('expenseList').querySelector('tbody');
+  table.innerHTML = '';
 
-        const descDiv = document.createElement('div');
-        let displayText = e.desc + ': ' + e.amount.toFixed(2) + ' zł';
-        if(e.category) displayText += ` [${e.category}${e.subcategory ? ' > ' + e.subcategory : ''}]`;
-        descDiv.textContent = displayText;
-        descDiv.style.marginBottom = '0.3rem';
+  (data.expenses || []).forEach((e, index) => {
+    const row = document.createElement('tr');
 
-        const btn = document.createElement('button');
-        btn.textContent = 'Usuń';
-        btn.style.width = '100%';
-        btn.style.padding = '0.5rem';
-        btn.style.backgroundColor = '#b22222';
-        btn.style.color = 'white';
-        btn.style.border = 'none';
-        btn.style.borderRadius = '6px';
-        btn.style.cursor = 'pointer';
+    const tdCat = document.createElement('td');
+    tdCat.textContent = e.category || '';
+    tdCat.style.padding = '0.5rem';
 
-        btn.onclick = () => {
-          removeExpense(index);
-        };
+    const tdSub = document.createElement('td');
+    tdSub.textContent = e.subcategory || '';
+    tdSub.style.padding = '0.5rem';
 
-        li.appendChild(descDiv);
-        li.appendChild(btn);
-        ul.appendChild(li);
-      });
-    }
+    const tdDesc = document.createElement('td');
+    tdDesc.textContent = e.desc || '-';
+    tdDesc.style.padding = '0.5rem';
+
+    const tdAmount = document.createElement('td');
+    tdAmount.textContent = e.amount.toFixed(2) + ' zł';
+    tdAmount.style.padding = '0.5rem';
+    tdAmount.style.textAlign = 'right';
+
+    const tdBtn = document.createElement('td');
+    tdBtn.style.textAlign = 'center';
+    tdBtn.style.padding = '0.5rem';
+    const btn = document.createElement('button');
+    btn.textContent = 'Usuń';
+    btn.style.background = '#b22222';
+    btn.style.color = '#fff';
+    btn.style.border = 'none';
+    btn.style.borderRadius = '6px';
+    btn.style.padding = '0.4rem 0.8rem';
+    btn.style.cursor = 'pointer';
+    btn.onclick = () => {
+      removeExpense(index);
+    };
+    tdBtn.appendChild(btn);
+
+    row.appendChild(tdCat);
+    row.appendChild(tdSub);
+    row.appendChild(tdDesc);
+    row.appendChild(tdAmount);
+    row.appendChild(tdBtn);
+
+    table.appendChild(row);
+  });
+}
 
     function removeExpense(index) {
       data.expenses.splice(index, 1);
@@ -388,11 +432,7 @@ Dostępne dziennie: ${dailyAvailable.toFixed(2)} zł
       const subcatSelect = document.getElementById('expenseSubcategory');
       const subcat = subcatSelect.style.display !== 'none' ? subcatSelect.value : "";
 
-      const desc = document.getElementById('expenseDesc').value.trim();
-      if(!desc) {
-        alert('Podaj opis wydatku!');
-        return;
-      }
+      const desc = document.getElementById('expenseDesc').value.trim(); // opis opcjonalny
 
       const amount = parseFloat(document.getElementById('expenseAmount').value);
       if(isNaN(amount) || amount <= 0) {

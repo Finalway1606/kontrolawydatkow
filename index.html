@@ -1366,6 +1366,9 @@
           monthStart = json.record.monthStart || null;
           
           // Aktualizuj pola formularza
+          if (savingsGoal > 0) {
+            document.getElementById('savingsGoal').value = savingsGoal;
+          }
           if (paymentDate > 0) {
             document.getElementById('paymentDate').value = paymentDate;
           }

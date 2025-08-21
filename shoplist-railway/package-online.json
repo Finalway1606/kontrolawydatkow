@@ -1,0 +1,25 @@
+{
+  "name": "lista-zakupow-online",
+  "version": "1.0.0",
+  "description": "Aplikacja do zarządzania listami zakupów z bazą online",
+  "main": "server-online.js",
+  "scripts": {
+    "start": "node server-online.js",
+    "dev": "nodemon server-online.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.11.3",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["shopping", "list", "nodejs", "postgresql"],
+  "author": "Twój Autor",
+  "license": "MIT"
+}

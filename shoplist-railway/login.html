@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopList Pro - Logowanie</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .auth-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .auth-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .auth-form {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .switch-form {
+            text-align: center;
+            color: #666;
+        }
+
+        .switch-form a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #363;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #363;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                margin: 10px;
+            }
+            
+            .auth-header {
+                padding: 20px;
+            }
+            
+            .auth-form {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1><i class="fas fa-shopping-cart"></i> ShopList Pro</h1>
+            <p>Inteligentna lista zakupów</p>
+        </div>
+
+        <div class="auth-form">
+            <div id="error-message" class="error-message hidden"></div>
+            <div id="success-message" class="success-message hidden"></div>
+
+            <!-- Formularz logowania -->
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Nazwa użytkownika lub email</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Hasło</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn" id="login-btn">
+                    <span class="btn-text">Zaloguj się</span>
+                    <span class="loading hidden"></span>
+                </button>
+                <div class="switch-form">
+                    Nie masz konta? <a href="#" id="show-register">Zarejestruj się</a>
+                </div>
+            </form>
+
+            <!-- Formularz rejestracji -->
+            <form id="register-form" class="hidden">
+                <div class="form-group">
+                    <label for="register-username">Nazwa użytkownika</label>
+                    <input type="text" id="register-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Hasło (min. 6 znaków)</label>
+                    <input type="password" id="register-password" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm-password">Potwierdź hasło</label>
+                    <input type="password" id="register-confirm-password" required>
+                </div>
+                <button type="submit" class="btn" id="register-btn">
+                    <span class="btn-text">Zarejestruj się</span>
+                    <span class="loading hidden"></span>
+                </button>
+                <div class="switch-form">
+                    Masz już konto? <a href="#" id="show-login">Zaloguj się</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+        
+        // Elementy DOM
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const showRegisterLink = document.getElementById('show-register');
+        const showLoginLink = document.getElementById('show-login');
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
+
+        // Przełączanie między formularzami
+        showRegisterLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.classList.add('hidden');
+            registerForm.classList.remove('hidden');
+            clearMessages();
+        });
+
+        showLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            clearMessages();
+        });
+
+        // Funkcje pomocnicze
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+            successMessage.classList.add('hidden');
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+        }
+
+        function clearMessages() {
+            errorMessage.classList.add('hidden');
+            successMessage.classList.add('hidden');
+        }
+
+        function setLoading(formType, loading) {
+            const btn = document.getElementById(`${formType}-btn`);
+            const btnText = btn.querySelector('.btn-text');
+            const loadingSpinner = btn.querySelector('.loading');
+            
+            if (loading) {
+                btn.disabled = true;
+                btnText.classList.add('hidden');
+                loadingSpinner.classList.remove('hidden');
+            } else {
+                btn.disabled = false;
+                btnText.classList.remove('hidden');
+                loadingSpinner.classList.add('hidden');
+            }
+        }
+
+        // Obsługa logowania
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearMessages();
+            setLoading('login', true);
+
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Zapisz token w localStorage
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    showSuccess('Zalogowano pomyślnie! Przekierowywanie...');
+                    
+                    // Przekieruj do głównej aplikacji
+                    setTimeout(() => {
+                        window.location.href = 'listazakupow.html';
+                    }, 1500);
+                } else {
+                    showError(data.error || 'Błąd logowania');
+                }
+            } catch (error) {
+                showError('Błąd połączenia z serwerem');
+            } finally {
+                setLoading('login', false);
+            }
+        });
+
+        // Obsługa rejestracji
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearMessages();
+            setLoading('register', true);
+
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+
+            // Walidacja hasła
+            if (password !== confirmPassword) {
+                showError('Hasła nie są identyczne');
+                setLoading('register', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, email, password }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Zapisz token w localStorage
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    showSuccess('Konto zostało utworzone! Przekierowywanie...');
+                    
+                    // Przekieruj do głównej aplikacji
+                    setTimeout(() => {
+                        window.location.href = 'listazakupow.html';
+                    }, 1500);
+                } else {
+                    showError(data.error || 'Błąd rejestracji');
+                }
+            } catch (error) {
+                showError('Błąd połączenia z serwerem');
+            } finally {
+                setLoading('register', false);
+            }
+        });
+
+        // Sprawdź czy użytkownik jest już zalogowany
+        if (localStorage.getItem('authToken')) {
+            window.location.href = 'listazakupow.html';
+        }
+    </script>
+</body>
+</html>

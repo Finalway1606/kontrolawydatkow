@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopList Pro - Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .demo-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .form-section {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .list-section {
+            padding: 30px;
+        }
+
+        .list-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .item-details {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .item-price {
+            font-weight: 600;
+            color: #4CAF50;
+            font-size: 1.1em;
+        }
+
+        .delete-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 15px;
+        }
+
+        .total {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+        }
+
+        .notification.success {
+            background: #4CAF50;
+        }
+
+        .notification.error {
+            background: #ff4757;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-shopping-cart"></i> ShopList Pro</h1>
+            <p>Inteligentna lista zakupów</p>
+            <div class="demo-badge">
+                <i class="fas fa-code"></i> Wersja Demo - GitHub Pages
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2><i class="fas fa-plus"></i> Dodaj produkt</h2>
+            <form id="productForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="store">Sklep</label>
+                        <select id="store" required>
+                            <option value="">Wybierz sklep</option>
+                            <option value="Biedronka">🛒 Biedronka</option>
+                            <option value="Lidl">🛒 Lidl</option>
+                            <option value="Kaufland">🛒 Kaufland</option>
+                            <option value="Carrefour">🛒 Carrefour</option>
+                            <option value="Auchan">🛒 Auchan</option>
+                            <option value="Żabka">🛒 Żabka</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Kategoria</label>
+                        <select id="category" required>
+                            <option value="">Wybierz kategorię</option>
+                            <option value="Warzywa">🥕 Warzywa</option>
+                            <option value="Owoce">🍎 Owoce</option>
+                            <option value="Mięso">🥩 Mięso</option>
+                            <option value="Nabiał">🥛 Nabiał</option>
+                            <option value="Pieczywo">🍞 Pieczywo</option>
+                            <option value="Napoje">🥤 Napoje</option>
+                            <option value="Słodycze">🍫 Słodycze</option>
+                            <option value="Chemia">🧽 Chemia</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="product">Nazwa produktu</label>
+                    <input type="text" id="product" placeholder="np. Mleko 3,2%" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quantity">Ilość</label>
+                        <input type="number" id="quantity" min="1" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Cena (zł)</label>
+                        <input type="number" id="price" step="0.01" min="0" placeholder="0.00" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-plus"></i> Dodaj do listy
+                </button>
+            </form>
+        </div>
+
+        <div class="list-section">
+            <h2><i class="fas fa-list"></i> Lista zakupów</h2>
+            <div id="shoppingList"></div>
+            <div class="total" id="totalCost">
+                Łączny koszt: 0.00 zł
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Dane aplikacji
+        let shoppingList = JSON.parse(localStorage.getItem('shoplist-demo') || '[]');
+
+        // Elementy DOM
+        const form = document.getElementById('productForm');
+        const listContainer = document.getElementById('shoppingList');
+        const totalElement = document.getElementById('totalCost');
+
+        // Inicjalizacja
+        document.addEventListener('DOMContentLoaded', function() {
+            renderList();
+            updateTotal();
+        });
+
+        // Obsługa formularza
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const product = {
+                id: Date.now(),
+                store: document.getElementById('store').value,
+                category: document.getElementById('category').value,
+                name: document.getElementById('product').value,
+                quantity: parseInt(document.getElementById('quantity').value),
+                price: parseFloat(document.getElementById('price').value)
+            };
+
+            shoppingList.push(product);
+            saveToStorage();
+            renderList();
+            updateTotal();
+            form.reset();
+            
+            showNotification('Produkt dodany do listy!', 'success');
+        });
+
+        // Renderowanie listy
+        function renderList() {
+            if (shoppingList.length === 0) {
+                listContainer.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Lista jest pusta. Dodaj pierwszy produkt!</p>';
+                return;
+            }
+
+            listContainer.innerHTML = shoppingList.map(item => `
+                <div class="list-item">
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-details">
+                            ${item.store} • ${item.category} • ${item.quantity} szt.
+                        </div>
+                    </div>
+                    <div class="item-price">${(item.price * item.quantity).toFixed(2)} zł</div>
+                    <button class="delete-btn" onclick="removeItem(${item.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Usuwanie produktu
+        function removeItem(id) {
+            shoppingList = shoppingList.filter(item => item.id !== id);
+            saveToStorage();
+            renderList();
+            updateTotal();
+            showNotification('Produkt usunięty z listy', 'success');
+        }
+
+        // Aktualizacja sumy
+        function updateTotal() {
+            const total = shoppingList.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            totalElement.textContent = `Łączny koszt: ${total.toFixed(2)} zł`;
+        }
+
+        // Zapisywanie do localStorage
+        function saveToStorage() {
+            localStorage.setItem('shoplist-demo', JSON.stringify(shoppingList));
+        }
+
+        // Powiadomienia
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

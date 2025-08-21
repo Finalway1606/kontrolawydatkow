@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel - Rozegrane Gry</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0f0f23;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .panel {
+            width: 320px;
+            height: 100px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            border: 2px solid #9966ff;
+            border-radius: 15px;
+            box-shadow: 
+                0 0 20px rgba(153, 102, 255, 0.3),
+                inset 0 0 20px rgba(153, 102, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(153, 102, 255, 0.3), inset 0 0 20px rgba(153, 102, 255, 0.1); }
+            to { box-shadow: 0 0 30px rgba(153, 102, 255, 0.5), inset 0 0 30px rgba(153, 102, 255, 0.2); }
+        }
+        
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #9966ff, #6600ff, #3300ff, #9966ff);
+            border-radius: 15px;
+            z-index: -1;
+            animation: rotate 4s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .content {
+            padding: 15px;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #9966ff;
+            text-shadow: 0 0 10px rgba(153, 102, 255, 0.8);
+            animation: textGlow 1.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px rgba(153, 102, 255, 0.8); }
+            to { text-shadow: 0 0 20px rgba(153, 102, 255, 1); }
+        }
+        
+        .game-icon {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            width: 25px;
+            height: 25px;
+            fill: #9966ff;
+            filter: drop-shadow(0 0 8px rgba(153, 102, 255, 0.8));
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <div class="content">
+            <svg class="game-icon" viewBox="0 0 24 24">
+                <path d="M7.97,16L5,19C4.67,19.3 4.23,19.5 3.75,19.5A1.75,1.75 0 0,1 2,17.75V17.5L3,10.12C3.21,7.81 5.14,6 7.5,6H16.5C18.86,6 20.79,7.81 21,10.12L22,17.5V17.75A1.75,1.75 0 0,1 20.25,19.5C19.77,19.5 19.33,19.3 19,19L16.03,16H7.97M7.5,8A0.5,0.5 0 0,0 7,8.5A0.5,0.5 0 0,0 7.5,9A0.5,0.5 0 0,0 8,8.5A0.5,0.5 0 0,0 7.5,8M16.5,8A0.5,0.5 0 0,0 16,8.5A0.5,0.5 0 0,0 16.5,9A0.5,0.5 0 0,0 17,8.5A0.5,0.5 0 0,0 16.5,8M8,10V12H6V10H8M18,10V12H16V10H18M9,11V13H7V11H9M17,11V13H15V11H17Z"/>
+            </svg>
+            <div class="title">ROZEGRANE GRY</div>
+        </div>
+    </div>
+</body>
+</html>

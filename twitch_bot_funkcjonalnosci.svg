@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="1800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradienty -->
+    <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9146FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6441A4;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1DB954;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1ED760;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00D4FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0099CC;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="redGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EE5A52;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Cienie -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+    
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Tło -->
+  <rect width="1200" height="1800" fill="#0E0E10"/>
+  
+  <!-- Nagłówek -->
+  <rect x="50" y="30" width="1100" height="100" rx="15" fill="url(#purpleGradient)" filter="url(#shadow)"/>
+  <text x="600" y="90" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="36" font-weight="bold">
+    🤖 KRANIKBOT - FUNKCJONALNOŚCI
+  </text>
+  
+  <!-- Sekcja 1: System Gier i Punktów -->
+  <rect x="50" y="160" width="530" height="320" rx="15" fill="#1F1F23" stroke="url(#goldGradient)" stroke-width="3" filter="url(#shadow)"/>
+  <text x="315" y="190" text-anchor="middle" fill="url(#goldGradient)" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+    🎮 SYSTEM GIER I PUNKTÓW
+  </text>
+  
+  <!-- Gry -->
+  <circle cx="120" cy="230" r="25" fill="url(#goldGradient)" filter="url(#glow)"/>
+  <text x="120" y="238" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🎲</text>
+  <text x="160" y="238" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!roll</text>
+  <text x="220" y="238" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Rzut kostką (1-100)</text>
+  
+  <circle cx="120" cy="270" r="25" fill="url(#goldGradient)" filter="url(#glow)"/>
+  <text x="120" y="278" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🪙</text>
+  <text x="160" y="278" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!coinflip</text>
+  <text x="240" y="278" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Orzeł czy reszka</text>
+  
+  <circle cx="120" cy="310" r="25" fill="url(#goldGradient)" filter="url(#glow)"/>
+  <text x="120" y="318" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🎰</text>
+  <text x="160" y="318" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!roulette</text>
+  <text x="240" y="318" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Ruletka z zakładami</text>
+  
+  <circle cx="120" cy="350" r="25" fill="url(#goldGradient)" filter="url(#glow)"/>
+  <text x="120" y="358" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">❓</text>
+  <text x="160" y="358" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!quiz</text>
+  <text x="210" y="358" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Quiz wiedzy</text>
+  
+  <circle cx="120" cy="390" r="25" fill="url(#goldGradient)" filter="url(#glow)"/>
+  <text x="120" y="398" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🎁</text>
+  <text x="160" y="398" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!daily</text>
+  <text x="210" y="398" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Dzienny bonus</text>
+  
+  <circle cx="120" cy="430" r="25" fill="url(#goldGradient)" filter="url(#glow)"/>
+  <text x="120" y="438" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">📊</text>
+  <text x="160" y="438" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!points / !top</text>
+  <text x="270" y="438" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Statystyki i ranking</text>
+  
+  <!-- Sekcja 2: Sklep Nagród -->
+  <rect x="620" y="160" width="530" height="320" rx="15" fill="#1F1F23" stroke="url(#blueGradient)" stroke-width="3" filter="url(#shadow)"/>
+  <text x="885" y="190" text-anchor="middle" fill="url(#blueGradient)" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+    🛒 SKLEP NAGRÓD
+  </text>
+  
+  <circle cx="690" cy="230" r="25" fill="url(#blueGradient)" filter="url(#glow)"/>
+  <text x="690" y="238" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🛍️</text>
+  <text x="730" y="238" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!shop</text>
+  <text x="780" y="238" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Lista dostępnych nagród</text>
+  
+  <circle cx="690" cy="270" r="25" fill="url(#blueGradient)" filter="url(#glow)"/>
+  <text x="690" y="278" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">💳</text>
+  <text x="730" y="278" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!kup</text>
+  <text x="770" y="278" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Kup nagrodę za punkty</text>
+  
+  <circle cx="690" cy="310" r="25" fill="url(#blueGradient)" filter="url(#glow)"/>
+  <text x="690" y="318" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🎒</text>
+  <text x="730" y="318" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!inventory</text>
+  <text x="820" y="318" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Twój ekwipunek</text>
+  
+  <circle cx="690" cy="350" r="25" fill="url(#redGradient)" filter="url(#glow)"/>
+  <text x="690" y="358" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🔨</text>
+  <text x="730" y="358" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!zabierz</text>
+  <text x="800" y="358" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Moderacja nagród</text>
+  
+  <circle cx="690" cy="390" r="25" fill="url(#goldGradient)" filter="url(#glow)"/>
+  <text x="690" y="398" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">💝</text>
+  <text x="730" y="398" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!give</text>
+  <text x="780" y="398" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Podaruj punkty</text>
+  
+  <!-- Sekcja 3: Spotify Integration -->
+  <rect x="50" y="510" width="530" height="280" rx="15" fill="#1F1F23" stroke="url(#greenGradient)" stroke-width="3" filter="url(#shadow)"/>
+  <text x="315" y="540" text-anchor="middle" fill="url(#greenGradient)" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+    🎵 SPOTIFY INTEGRATION
+  </text>
+  
+  <circle cx="120" cy="580" r="25" fill="url(#greenGradient)" filter="url(#glow)"/>
+  <text x="120" y="588" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🔍</text>
+  <text x="160" y="588" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!sr</text>
+  <text x="190" y="588" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Wyszukaj i dodaj piosenkę</text>
+  
+  <circle cx="120" cy="620" r="25" fill="url(#greenGradient)" filter="url(#glow)"/>
+  <text x="120" y="628" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">✅</text>
+  <text x="160" y="628" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!select</text>
+  <text x="220" y="628" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Wybierz z wyników</text>
+  
+  <circle cx="120" cy="660" r="25" fill="url(#greenGradient)" filter="url(#glow)"/>
+  <text x="120" y="668" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">▶️</text>
+  <text x="160" y="668" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!ply</text>
+  <text x="190" y="668" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Odtwórz muzykę</text>
+  
+  <circle cx="120" cy="700" r="25" fill="url(#greenGradient)" filter="url(#glow)"/>
+  <text x="120" y="708" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">⏭️</text>
+  <text x="160" y="708" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!skip</text>
+  <text x="200" y="708" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Pomiń piosenkę</text>
+  
+  <circle cx="120" cy="740" r="25" fill="url(#greenGradient)" filter="url(#glow)"/>
+  <text x="120" y="748" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🎶</text>
+  <text x="160" y="748" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!currentsong</text>
+  <text x="270" y="748" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Aktualna piosenka</text>
+  
+  <!-- Sekcja 4: Automatyczne Systemy -->
+  <rect x="620" y="510" width="530" height="280" rx="15" fill="#1F1F23" stroke="url(#purpleGradient)" stroke-width="3" filter="url(#shadow)"/>
+  <text x="885" y="540" text-anchor="middle" fill="url(#purpleGradient)" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+    🤖 AUTOMATYCZNE SYSTEMY
+  </text>
+  
+  <circle cx="690" cy="580" r="25" fill="url(#purpleGradient)" filter="url(#glow)"/>
+  <text x="690" y="588" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">👋</text>
+  <text x="730" y="588" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Follow Tracker</text>
+  <text x="850" y="588" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Auto-podziękowania</text>
+  
+  <circle cx="690" cy="620" r="25" fill="url(#purpleGradient)" filter="url(#glow)"/>
+  <text x="690" y="628" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">⭐</text>
+  <text x="730" y="628" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Sub Tracker</text>
+  <text x="830" y="628" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Śledzenie subów</text>
+  
+  <circle cx="690" cy="660" r="25" fill="url(#purpleGradient)" filter="url(#glow)"/>
+  <text x="690" y="668" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🔄</text>
+  <text x="730" y="668" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Permissions</text>
+  <text x="830" y="668" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Dynamiczne uprawnienia</text>
+  
+  <circle cx="690" cy="700" r="25" fill="url(#purpleGradient)" filter="url(#glow)"/>
+  <text x="690" y="708" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">💬</text>
+  <text x="730" y="708" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Chat Reminders</text>
+  <text x="860" y="708" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Przypomnienia</text>
+  
+  <circle cx="690" cy="740" r="25" fill="url(#redGradient)" filter="url(#glow)"/>
+  <text x="690" y="748" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🚀</text>
+  <text x="730" y="748" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Raid Handler</text>
+  <text x="840" y="748" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Obsługa rajdów</text>
+  
+  <!-- Sekcja 5: Komendy Pomocnicze -->
+  <rect x="50" y="820" width="530" height="200" rx="15" fill="#1F1F23" stroke="#FF6B6B" stroke-width="3" filter="url(#shadow)"/>
+  <text x="315" y="850" text-anchor="middle" fill="#FF6B6B" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+    ℹ️ KOMENDY POMOCNICZE
+  </text>
+  
+  <circle cx="120" cy="890" r="25" fill="#FF6B6B" filter="url(#glow)"/>
+  <text x="120" y="898" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">❓</text>
+  <text x="160" y="898" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!help</text>
+  <text x="210" y="898" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Lista wszystkich komend</text>
+  
+  <circle cx="120" cy="930" r="25" fill="#FF6B6B" filter="url(#glow)"/>
+  <text x="120" y="938" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">💪</text>
+  <text x="160" y="938" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!motywacja</text>
+  <text x="250" y="938" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Motywacyjny cytat</text>
+  
+  <circle cx="120" cy="970" r="25" fill="#FF6B6B" filter="url(#glow)"/>
+  <text x="120" y="978" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">⚙️</text>
+  <text x="160" y="978" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">!shutdown</text>
+  <text x="240" y="978" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">Wyłącz bota (mod)</text>
+  
+  <!-- Sekcja 6: Statystyki i Dane -->
+  <rect x="620" y="820" width="530" height="200" rx="15" fill="#1F1F23" stroke="#00D4FF" stroke-width="3" filter="url(#shadow)"/>
+  <text x="885" y="850" text-anchor="middle" fill="#00D4FF" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+    📊 STATYSTYKI LIVE
+  </text>
+  
+  <rect x="650" y="870" width="120" height="60" rx="8" fill="#2A2A2E" stroke="#FFD700" stroke-width="2"/>
+  <text x="710" y="890" text-anchor="middle" fill="#FFD700" font-family="Arial, sans-serif" font-size="12" font-weight="bold">MODERATORZY</text>
+  <text x="710" y="910" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="18" font-weight="bold">7</text>
+  
+  <rect x="790" y="870" width="120" height="60" rx="8" fill="#2A2A2E" stroke="#9146FF" stroke-width="2"/>
+  <text x="850" y="890" text-anchor="middle" fill="#9146FF" font-family="Arial, sans-serif" font-size="12" font-weight="bold">VIP-OWI</text>
+  <text x="850" y="910" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="18" font-weight="bold">1</text>
+  
+  <rect x="930" y="870" width="120" height="60" rx="8" fill="#2A2A2E" stroke="#1DB954" stroke-width="2"/>
+  <text x="990" y="890" text-anchor="middle" fill="#1DB954" font-family="Arial, sans-serif" font-size="12" font-weight="bold">SUBSKRYBENCI</text>
+  <text x="990" y="910" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="18" font-weight="bold">9</text>
+  
+  <rect x="650" y="950" width="120" height="60" rx="8" fill="#2A2A2E" stroke="#FF6B6B" stroke-width="2"/>
+  <text x="710" y="970" text-anchor="middle" fill="#FF6B6B" font-family="Arial, sans-serif" font-size="12" font-weight="bold">FOLLOWERZY</text>
+  <text x="710" y="990" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="18" font-weight="bold">235</text>
+  
+  <rect x="790" y="950" width="260" height="60" rx="8" fill="#2A2A2E" stroke="#00D4FF" stroke-width="2"/>
+  <text x="920" y="970" text-anchor="middle" fill="#00D4FF" font-family="Arial, sans-serif" font-size="12" font-weight="bold">AKTUALIZACJA CO 5 MIN</text>
+  <text x="920" y="990" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">🔄 AUTOMATYCZNA</text>
+  
+  <!-- Sekcja 7: Nowa funkcja - Raid Handler -->
+  <rect x="50" y="1050" width="1100" height="150" rx="15" fill="#1F1F23" stroke="url(#redGradient)" stroke-width="3" filter="url(#shadow)"/>
+  <text x="600" y="1080" text-anchor="middle" fill="url(#redGradient)" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+    🚀 NOWA FUNKCJA: OBSŁUGA RAJDÓW
+  </text>
+  
+  <circle cx="150" cy="1130" r="30" fill="url(#redGradient)" filter="url(#glow)"/>
+  <text x="150" y="1140" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="bold">🚀</text>
+  <text x="200" y="1120" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Automatyczne wykrywanie rajdów</text>
+  <text x="200" y="1140" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="14">• Wyświetla kto zrajdował i z iloma widzami</text>
+  <text x="200" y="1160" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="14">• Pokazuje ostatnio graną grę przez rajdera</text>
+  
+  <circle cx="650" cy="1130" r="30" fill="url(#redGradient)" filter="url(#glow)"/>
+  <text x="650" y="1140" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="bold">💜</text>
+  <text x="700" y="1120" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Polecenie profilu rajdera</text>
+  <text x="700" y="1140" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="14">• Automatyczna rekomendacja do obserwowania</text>
+  <text x="700" y="1160" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="14">• Integracja z Twitch API</text>
+  
+  <!-- Sekcja 8: Uprawnienia i Role -->
+  <rect x="50" y="1230" width="1100" height="280" rx="15" fill="#1F1F23" stroke="#FFD700" stroke-width="3" filter="url(#shadow)"/>
+  <text x="600" y="1260" text-anchor="middle" fill="#FFD700" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+    👑 UPRAWNIENIA I ROLE UŻYTKOWNIKÓW
+  </text>
+  
+  <!-- Wszyscy użytkownicy -->
+  <rect x="80" y="1280" width="250" height="200" rx="10" fill="#2A2A2E" stroke="#00FF00" stroke-width="2"/>
+  <text x="205" y="1305" text-anchor="middle" fill="#00FF00" font-family="Arial, sans-serif" font-size="16" font-weight="bold">👤 WSZYSCY UŻYTKOWNICY</text>
+  
+  <text x="90" y="1325" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">🎮 Gry i punkty:</text>
+  <text x="90" y="1340" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !roll, !coinflip, !roulette</text>
+  <text x="90" y="1355" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !quiz, !answer, !daily</text>
+  <text x="90" y="1370" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !points, !top</text>
+  
+  <text x="90" y="1390" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">🛒 Sklep:</text>
+  <text x="90" y="1405" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !shop, !kup, !inventory</text>
+  
+  <text x="90" y="1425" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">ℹ️ Pomocnicze:</text>
+  <text x="90" y="1440" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !help, !motywacja</text>
+  <text x="90" y="1455" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !currentsong</text>
+  
+  <!-- Subskrybenci -->
+  <rect x="350" y="1280" width="250" height="200" rx="10" fill="#2A2A2E" stroke="#9146FF" stroke-width="2"/>
+  <text x="475" y="1305" text-anchor="middle" fill="#9146FF" font-family="Arial, sans-serif" font-size="16" font-weight="bold">⭐ SUBSKRYBENCI + VIP</text>
+  
+  <text x="360" y="1325" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">🎵 Spotify bez limitów:</text>
+  <text x="360" y="1340" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !sr (bez cooldownu)</text>
+  <text x="360" y="1355" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !select, !ply</text>
+  <text x="360" y="1370" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !skip (bez ograniczeń)</text>
+  
+  <text x="360" y="1390" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">💝 Dodatkowe:</text>
+  <text x="360" y="1405" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !give (przekazuj punkty)</text>
+  
+  <text x="360" y="1425" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">🔄 Automatyczne:</text>
+  <text x="360" y="1440" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• Podziękowania za sub</text>
+  <text x="360" y="1455" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• Dynamiczne uprawnienia</text>
+  
+  <!-- Moderatorzy -->
+  <rect x="620" y="1280" width="250" height="200" rx="10" fill="#2A2A2E" stroke="#FFD700" stroke-width="2"/>
+  <text x="745" y="1305" text-anchor="middle" fill="#FFD700" font-family="Arial, sans-serif" font-size="16" font-weight="bold">👑 MODERATORZY</text>
+  
+  <text x="630" y="1325" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">🔨 Moderacja:</text>
+  <text x="630" y="1340" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !zabierz (usuń nagrody)</text>
+  <text x="630" y="1355" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !give (bez limitów)</text>
+  
+  <text x="630" y="1375" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">🎵 Spotify kontrola:</text>
+  <text x="630" y="1390" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !spotifyoff / !spotifyon</text>
+  <text x="630" y="1405" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• Pełna kontrola muzyki</text>
+  
+  <text x="630" y="1425" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">⚙️ System:</text>
+  <text x="630" y="1440" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !followsoff / !followson</text>
+  <text x="630" y="1455" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !subsoff / !subson</text>
+  
+  <!-- Właściciel -->
+  <rect x="890" y="1280" width="250" height="200" rx="10" fill="#2A2A2E" stroke="#FF0000" stroke-width="2"/>
+  <text x="1015" y="1305" text-anchor="middle" fill="#FF0000" font-family="Arial, sans-serif" font-size="16" font-weight="bold">👨‍💻 WŁAŚCICIEL</text>
+  
+  <text x="900" y="1325" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">🔧 Pełna kontrola:</text>
+  <text x="900" y="1340" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• !shutdown (wyłącz bota)</text>
+  <text x="900" y="1355" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• Wszystkie komendy mod</text>
+  
+  <text x="900" y="1375" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">🛠️ Administracja:</text>
+  <text x="900" y="1390" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• Konfiguracja systemu</text>
+  <text x="900" y="1405" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• Zarządzanie bazą danych</text>
+  
+  <text x="900" y="1425" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">🔄 API:</text>
+  <text x="900" y="1440" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• Aktualizacja uprawnień</text>
+  <text x="900" y="1455" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11">• Zarządzanie tokenami</text>
+  
+  <!-- Sekcja 9: Technologie -->
+  <rect x="50" y="1540" width="1100" height="120" rx="15" fill="#1F1F23" stroke="#FFFFFF" stroke-width="2" filter="url(#shadow)"/>
+  <text x="600" y="1570" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+    ⚙️ TECHNOLOGIE I INTEGRACJE
+  </text>
+  
+  <circle cx="150" cy="1610" r="20" fill="#9146FF"/>
+  <text x="150" y="1617" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">API</text>
+  <text x="180" y="1617" fill="white" font-family="Arial, sans-serif" font-size="14">Twitch Helix API</text>
+  
+  <circle cx="350" cy="1610" r="20" fill="#1DB954"/>
+  <text x="350" y="1617" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">🎵</text>
+  <text x="380" y="1617" fill="white" font-family="Arial, sans-serif" font-size="14">Spotify API</text>
+  
+  <circle cx="520" cy="1610" r="20" fill="#FFD700"/>
+  <text x="520" y="1617" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">IRC</text>
+  <text x="550" y="1617" fill="white" font-family="Arial, sans-serif" font-size="14">Twitch IRC</text>
+  
+  <circle cx="680" cy="1610" r="20" fill="#00D4FF"/>
+  <text x="680" y="1617" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">DB</text>
+  <text x="710" y="1617" fill="white" font-family="Arial, sans-serif" font-size="14">SQLite Database</text>
+  
+  <circle cx="880" cy="1610" r="20" fill="#FF6B6B"/>
+  <text x="880" y="1617" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">🐍</text>
+  <text x="910" y="1617" fill="white" font-family="Arial, sans-serif" font-size="14">Python 3.x</text>
+  
+  <!-- Stopka -->
+  <rect x="50" y="1690" width="1100" height="80" rx="15" fill="url(#purpleGradient)" filter="url(#shadow)"/>
+  <text x="600" y="1720" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    🎯 KRANIKBOT - KOMPLETNY SYSTEM INTERAKTYWNY DLA TWITCH
+  </text>
+  <text x="600" y="1745" text-anchor="middle" fill="#E0E0E0" font-family="Arial, sans-serif" font-size="14">
+    Automatyczne uprawnienia • Dynamiczne systemy • Integracja z API • Real-time updates
+  </text>
+  <text x="600" y="1760" text-anchor="middle" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="12">
+    Wersja 2.0 z obsługą rajdów i systemem uprawnień | Twórca: AI Assistant
+  </text>
+  
+  <!-- Dekoracyjne elementy -->
+  <circle cx="100" cy="100" r="3" fill="#9146FF" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="1100" cy="100" r="3" fill="#9146FF" opacity="0.6">
+    <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="100" cy="1700" r="3" fill="#9146FF" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="1100" cy="1700" r="3" fill="#9146FF" opacity="0.6">
+    <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

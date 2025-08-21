@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel - O Mnie</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0f0f23;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .panel {
+            width: 320px;
+            height: 100px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            border: 2px solid #ff6600;
+            border-radius: 15px;
+            box-shadow: 
+                0 0 20px rgba(255, 102, 0, 0.3),
+                inset 0 0 20px rgba(255, 102, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(255, 102, 0, 0.3), inset 0 0 20px rgba(255, 102, 0, 0.1); }
+            to { box-shadow: 0 0 30px rgba(255, 102, 0, 0.5), inset 0 0 30px rgba(255, 102, 0, 0.2); }
+        }
+        
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff6600, #ff0066, #6600ff, #ff6600);
+            border-radius: 15px;
+            z-index: -1;
+            animation: rotate 7s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .content {
+            padding: 15px;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff6600;
+            text-shadow: 0 0 10px rgba(255, 102, 0, 0.8);
+            margin-bottom: 12px;
+            animation: textGlow 1.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px rgba(255, 102, 0, 0.8); }
+            to { text-shadow: 0 0 20px rgba(255, 102, 0, 1); }
+        }
+        
+        .about-text {
+            font-size: 12px;
+            color: #ffffff;
+            line-height: 1.4;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        
+        .user-icon {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            width: 25px;
+            height: 25px;
+            fill: #ff6600;
+            filter: drop-shadow(0 0 8px rgba(255, 102, 0, 0.8));
+            animation: wave 3s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            75% { transform: rotate(-10deg); }
+        }
+        
+        .stars {
+            position: absolute;
+            bottom: 10px;
+            left: 15px;
+            display: flex;
+            gap: 5px;
+        }
+        
+        .star {
+            width: 8px;
+            height: 8px;
+            background: #ffff00;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: twinkle 2s ease-in-out infinite;
+        }
+        
+        .star:nth-child(1) { animation-delay: 0s; }
+        .star:nth-child(2) { animation-delay: 0.3s; }
+        .star:nth-child(3) { animation-delay: 0.6s; }
+        .star:nth-child(4) { animation-delay: 0.9s; }
+        .star:nth-child(5) { animation-delay: 1.2s; }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <div class="content">
+            <svg class="user-icon" viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+            <div class="title">O MNIE</div>
+            <div class="stars">
+                <div class="star"></div>
+                <div class="star"></div>
+                <div class="star"></div>
+                <div class="star"></div>
+                <div class="star"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

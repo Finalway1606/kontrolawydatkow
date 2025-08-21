@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Budżet Domowy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --primary-light: #a5b4fc;
+    --secondary: #ec4899;
+    --secondary-light: #fbcfe8;
+    --dark: #1e293b;
+    --light: #f8fafc;
+    --gray: #64748b;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--light);
+    color: var(--dark);
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 20%),
+      radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.05) 0%, transparent 20%),
+      radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.03) 0%, transparent 100%);
+    background-attachment: fixed;
+  }
+
+  .app-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+
+  .header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    position: relative;
+    display: inline-block;
+  }
+
+  .header h1::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--gradient);
+    border-radius: 2px;
+  }
+
+  .header p {
+    color: var(--gray);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 1rem auto 0;
+  }
+
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .dashboard-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .dashboard-card i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .dashboard-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+  }
+
+  .dashboard-card p {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .dashboard-card.income p {
+    color: var(--success);
+  }
+
+  .dashboard-card.expenses p {
+    color: var(--danger);
+  }
+
+  .dashboard-card.balance p {
+    color: var(--primary);
+  }
+
+  .dashboard-card.savings p {
+    color: var(--warning);
+  }
+
+  .dashboard-card.daily-limit p {
+    color: var(--secondary);
+  }
+
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gradient);
+    border-radius: 4px 0 0 4px;
+  }
+
+  .card h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+  }
+
+  .card h2 i {
+    margin-right: 0.75rem;
+    font-size: 1.25rem;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .input-group {
+    margin-bottom: 1rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--dark);
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--dark);
+    background: white;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+  }
+
+  .btn i {
+    margin-right: 0.5rem;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    background: white;
+    color: var(--primary);
+    border: 1px solid var(--primary-light);
+  }
+
+  .btn-secondary:hover {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+  }
+
+  .btn-danger {
+    background: var(--danger);
+    color: white;
+  }
+
+  .btn-danger:hover {
+    background: #dc2626;
+  }
+
+  .btn-success {
+    background: var(--success);
+    color: white;
+  }
+
+  .btn-success:hover {
+    background: #059669;
+  }
+
+  .flex-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .flex-row:hover {
+    background: #f1f5f9;
+    transform: translateX(5px);
+  }
+
+  .flex-row input[type="text"] {
+    flex: 2;
+  }
+
+  .flex-row input[type="number"] {
+    flex: 1;
+  }
+
+  .result {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    margin-top: 1rem;
+    border-left: 4px solid var(--primary);
+  }
+
+  .expense-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 1rem;
+    padding-right: 0.5rem;
+  }
+
+  .expense-list::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .expense-list::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+  }
+
+  .expense-list::-webkit-scrollbar-thumb {
+    background: var(--primary-light);
+    border-radius: 3px;
+  }
+
+  .expense-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .expense-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .expense-item-details {
+    flex: 1;
+  }
+
+  .expense-item-category {
+    font-weight: 600;
+    color: var(--primary);
+    margin-right: 0.5rem;
+  }
+
+  .expense-item-subcategory {
+    color: var(--gray);
+    font-size: 0.9rem;
+  }
+
+  .expense-item-amount {
+    font-weight: 600;
+    color: var(--danger);
+  }
+
+  .expense-item-actions {
+    margin-left: 1rem;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    color: var(--gray);
+  }
+
+  .footer p {
+    font-size: 0.9rem;
+  }
+
+  .tabs {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    overflow-x: auto;
+  }
+
+  .tab {
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    color: var(--gray);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .tab.active {
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+  }
+
+  .tab:hover {
+    color: var(--primary-dark);
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .chart-container {
+    height: 300px;
+    margin-top: 1.5rem;
+    position: relative;
+  }
+
+  .chart-bar {
+    position: absolute;
+    bottom: 0;
+    width: 40px;
+    background: var(--gradient);
+    border-radius: 6px 6px 0 0;
+    transition: height 1s ease;
+  }
+
+  .chart-label {
+    position: absolute;
+    bottom: -25px;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--gray);
+    width: 40px;
+  }
+
+  .tooltip {
+    position: absolute;
+    background: var(--dark);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+  }
+
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    align-items: center;
+    transform: translateX(120%);
+    transition: transform 0.5s ease;
+    z-index: 1000;
+  }
+
+  .notification.show {
+    transform: translateX(0);
+  }
+
+  .notification i {
+    margin-right: 0.75rem;
+    font-size: 1.25rem;
+  }
+
+  .notification.success i {
+    color: var(--success);
+  }
+
+  .notification.error i {
+    color: var(--danger);
+  }
+
+  .notification-message {
+    flex: 1;
+  }
+
+  .notification-close {
+    background: none;
+    border: none;
+    color: var(--gray);
+    cursor: pointer;
+    margin-left: 0.75rem;
+    font-size: 1rem;
+  }
+
+  /* Responsywność */
+  @media (max-width: 768px) {
+    .dashboard {
+      grid-template-columns: 1fr;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+    }
+
+    .header p {
+      font-size: 1rem;
+    }
+
+    .flex-row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.5rem;
+    }
+
+    .flex-row input[type="text"],
+    .flex-row input[type="number"] {
+      width: 100%;
+    }
+  }
+
+  /* Animacje */
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  .pulse {
+    animation: pulse 2s infinite;
+  }
+
+  /* Skarbonka animacja */
+  .piggy-bank {
+    position: fixed;
+    width: 100px;
+    height: 100px;
+    background-image: url('skarbonka.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: -1;
+    opacity: 0.5;
+    transition: all 0.5s ease;
+  }
+
+  .piggy-left {
+    left: 5%;
+    top: 30%;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .piggy-right {
+    right: 5%;
+    top: 60%;
+    transform: scaleX(-1);
+    animation: float 8s ease-in-out infinite reverse;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+  }
+
+  .piggy-right {
+    animation-delay: -4s;
+  }
+
+  @media (max-width: 1200px) {
+    .piggy-bank {
+      display: none;
+    }
+  }
+</style>
+</head>
+<body>
+  <!-- Elementy dekoracyjne - skarbonki po bokach -->
+  <div class="piggy-bank piggy-left"></div>
+  <div class="piggy-bank piggy-right"></div>
+  
+  <div class="app-container">
+    <header class="header">
+      <h1>Budżet Domowy</h1>
+      <p>Inteligentne zarządzanie finansami domowymi</p>
+    </header>
+
+    <!-- Dashboard z podsumowaniem -->
+    <div class="dashboard" id="dashboard">
+      <div class="dashboard-card income">
+        <i class="fas fa-wallet"></i>
+        <h3>Wpływy</h3>
+        <p id="dashboardIncome">0.00 PLN</p>
+      </div>
+      <div class="dashboard-card expenses">
+        <i class="fas fa-shopping-cart"></i>
+        <h3>Wydatki</h3>
+        <p id="dashboardExpenses">0.00 PLN</p>
+      </div>
+      <div class="dashboard-card balance">
+        <i class="fas fa-balance-scale"></i>
+        <h3>Saldo</h3>
+        <p id="dashboardBalance">0.00 PLN</p>
+      </div>
+      <div class="dashboard-card savings">
+        <i class="fas fa-piggy-bank"></i>
+        <h3>Cel oszczędzania</h3>
+        <p id="dashboardSavings">0.00 PLN</p>
+      </div>
+      <div class="dashboard-card daily-limit">
+        <i class="fas fa-calendar-day"></i>
+        <h3>Dzienny limit</h3>
+        <p id="dashboardDailyLimit">0.00 PLN</p>
+      </div>
+    </div>
+
+    <!-- Nawigacja zakładek -->
+    <div class="tabs">
+      <div class="tab active" data-tab="income">Wpływy</div>
+      <div class="tab" data-tab="fixed-expenses">Wydatki stałe</div>
+      <div class="tab" data-tab="subscriptions">Subskrypcje</div>
+      <div class="tab" data-tab="ad-hoc">Wydatki ad hoc</div>
+      <div class="tab" data-tab="savings">Cel oszczędzania</div>
+      <div class="tab" data-tab="summary">Podsumowanie</div>
+    </div>
+
+    <!-- Zakładka Wpływy -->
+    <div class="tab-content active" id="income-tab">
+      <div class="card">
+        <h2><i class="fas fa-wallet"></i> Wpływy</h2>
+        <div id="incomeList"></div>
+        <button class="btn btn-primary" onclick="addIncome()"><i class="fas fa-plus"></i> Dodaj wpływ</button>
+      </div>
+    </div>
+
+    <!-- Zakładka Wydatki stałe -->
+    <div class="tab-content" id="fixed-expenses-tab">
+      <div class="card">
+        <h2><i class="fas fa-home"></i> Wydatki stałe</h2>
+        <div id="fixedExpensesList"></div>
+        <button class="btn btn-primary" onclick="addFixedExpense()"><i class="fas fa-plus"></i> Dodaj wydatek stały</button>
+      </div>
+    </div>
+
+    <!-- Zakładka Subskrypcje -->
+    <div class="tab-content" id="subscriptions-tab">
+      <div class="card">
+        <h2><i class="fas fa-sync-alt"></i> Subskrypcje</h2>
+        <div id="subscriptionsList"></div>
+        <button class="btn btn-primary" onclick="addSubscription()"><i class="fas fa-plus"></i> Dodaj subskrypcję</button>
+      </div>
+    </div>
+
+    <!-- Zakładka Wydatki ad hoc -->
+    <div class="tab-content" id="ad-hoc-tab">
+      <div class="card">
+        <h2><i class="fas fa-shopping-cart"></i> Wydatki ad hoc</h2>
+        <div class="input-group">
+          <label for="expenseCategory">Kategoria:</label>
+          <select id="expenseCategory" onchange="categoryChanged()">
+            <option value="">-- Wybierz kategorię --</option>
+            <option value="spozywka">Spożywka</option>
+            <option value="restauracje">Restauracje</option>
+            <option value="paliwo">Paliwo</option>
+            <option value="wakacje">Wakacje</option>
+            <option value="inne">Inne</option>
+          </select>
+        </div>
+
+        <div class="input-group" id="subcategoryGroup" style="display:none;">
+          <label id="subcategoryLabel" for="expenseSubcategory">Podkategoria:</label>
+          <select id="expenseSubcategory">
+            <option value="">-- Wybierz podkategorię --</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="expenseDesc">Opis wydatku (opcjonalny):</label>
+          <input type="text" id="expenseDesc" />
+        </div>
+
+        <div class="input-group">
+          <label for="expenseAmount">Kwota wydatku:</label>
+          <input type="number" id="expenseAmount" step="0.01" min="0" />
+        </div>
+
+        <button class="btn btn-primary" onclick="addExpense()"><i class="fas fa-plus"></i> Dodaj wydatek</button>
+      </div>
+    </div>
+
+    <!-- Zakładka Cel oszczędzania -->
+    <div class="tab-content" id="savings-tab">
+      <div class="card">
+        <h2><i class="fas fa-piggy-bank"></i> Cel oszczędzania</h2>
+        
+        <div class="input-group">
+           <label for="savingsGoal">Miesięczny cel oszczędzania (PLN):</label>
+           <input type="number" id="savingsGoal" step="0.01" min="0" placeholder="Wprowadź kwotę do oszczędzenia" />
+         </div>
+         
+         <div class="input-group">
+           <label for="paymentDate">Data wypłaty (dzień miesiąca):</label>
+           <input type="number" id="paymentDate" min="1" max="31" placeholder="Dzień wypłaty (np. 15)" />
+         </div>
+         
+         <div class="input-group">
+           <label for="monthStart">Początek okresu budżetowego:</label>
+           <input type="date" id="monthStart" />
+         </div>
+         
+         <button class="btn btn-primary" onclick="setSavingsGoal()"><i class="fas fa-target"></i> Ustaw cel</button>
+        
+        <div id="savingsInfo" style="margin-top: 1.5rem; display: none;">
+          <div class="result">
+            <h3><i class="fas fa-info-circle"></i> Informacje o celu oszczędzania:</h3>
+            <p id="savingsGoalText"></p>
+            <p id="dailyLimitText"></p>
+            <p id="remainingDaysText"></p>
+            <p id="currentProgressText"></p>
+          </div>
+        </div>
+        
+        <button class="btn btn-danger" onclick="clearSavingsGoal()" style="margin-top: 1rem;"><i class="fas fa-times"></i> Usuń cel</button>
+      </div>
+    </div>
+
+    <!-- Zakładka Podsumowanie -->
+    <div class="tab-content" id="summary-tab">
+      <div class="card">
+        <h2><i class="fas fa-chart-pie"></i> Podsumowanie</h2>
+        <p id="summaryText" class="result"></p>
+
+        <h3><i class="fas fa-list"></i> Wydatki ad hoc:</h3>
+        <div class="expense-list" id="expenseList"></div>
+
+        <div class="chart-container" id="chartContainer">
+          <!-- Wykres będzie generowany przez JavaScript -->
+        </div>
+
+        <button class="btn btn-danger" onclick="resetBin()"><i class="fas fa-trash"></i> Resetuj dane (ostrzeżenie!)</button>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:2rem;">
+      <button class="btn btn-success" onclick="saveData()"><i class="fas fa-save"></i> Zapisz dane</button>
+    </div>
+
+    <footer class="footer">
+      <p>Budżet Domowy &copy; 2025 | Paweł Chrzan |</p>
+    </footer>
+  </div>
+
+  <!-- Powiadomienia -->
+  <div class="notification success" id="notification">
+    <i class="fas fa-check-circle"></i>
+    <div class="notification-message" id="notificationMessage"></div>
+    <button class="notification-close" onclick="hideNotification()"><i class="fas fa-times"></i></button>
+  </div>
+
+  <script>
+    const binId = "688a2a2c7b4b8670d8a9e071";
+    const masterKey = "$2a$10$PrRx.RBOnJmEFTqQQLH/Tu8TXFwoNEI.j/XEFF19EYFYELKzSX9BC";
+    const apiUrl = `https://api.jsonbin.io/v3/b/${binId}/latest`;
+
+    let incomes = [];
+    let fixedExpenses = [];
+    let subscriptions = [];
+    let adHocExpenses = [];
+    let savingsGoal = 0;
+    let paymentDate = 0;
+    let monthStart = null;
+
+    const options = {
+      spozywka: ['Biedronka', 'Lidl', 'Żabka', 'Carrefour', 'Auchan'],
+      restauracje: ['McDonald\'s', 'KFC', 'Lokal', 'Kawiarnia', 'Dowóz', 'Inne'],
+      paliwo: ['Orlen', 'Shell', 'Statoil', 'BP'],
+      wakacje: ['Hotel', 'Bilety', 'Wycieczka', 'Inne'],
+      inne: ['Różne']
+    };
+
+    // Obsługa zakładek
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(`${tabId}-tab`).classList.add('active');
+      });
+    });
+
+    function createInputRow(container, dataArray, index) {
+      const div = document.createElement("div");
+      div.className = "flex-row";
+
+      const nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.value = dataArray[index].name;
+      nameInput.placeholder = "Nazwa";
+      nameInput.oninput = () => {
+        dataArray[index].name = nameInput.value;
+        updateSummary();
+        updateDashboard();
+      };
+
+      const amountInput = document.createElement("input");
+      amountInput.type = "number";
+      amountInput.min = "0";
+      amountInput.step = "0.01";
+      amountInput.value = dataArray[index].amount;
+      amountInput.placeholder = "Kwota";
+      amountInput.oninput = () => {
+        let val = parseFloat(amountInput.value);
+        if (isNaN(val) || val < 0) val = 0;
+        dataArray[index].amount = val;
+        updateSummary();
+        updateDashboard();
+      };
+
+      const removeButton = document.createElement("button");
+      removeButton.innerHTML = '<i class="fas fa-trash"></i> Usuń';
+      removeButton.className = "btn btn-danger";
+      removeButton.onclick = () => {
+        dataArray.splice(index, 1);
+        renderAll();
+        updateSummary();
+        updateDashboard();
+        showNotification('Element został usunięty', 'success');
+      };
+
+      div.appendChild(nameInput);
+      div.appendChild(amountInput);
+      div.appendChild(removeButton);
+
+      container.appendChild(div);
+    }
+
+    function renderAll() {
+      const incomeList = document.getElementById("incomeList");
+      incomeList.innerHTML = "";
+      incomes.forEach((_, i) => createInputRow(incomeList, incomes, i));
+
+      const fixedExpensesList = document.getElementById("fixedExpensesList");
+      fixedExpensesList.innerHTML = "";
+      fixedExpenses.forEach((_, i) => createInputRow(fixedExpensesList, fixedExpenses, i));
+
+      const subscriptionsList = document.getElementById("subscriptionsList");
+      subscriptionsList.innerHTML = "";
+      subscriptions.forEach((_, i) => createInputRow(subscriptionsList, subscriptions, i));
+
+      renderAdHocExpenses();
+      updateSummary();
+      updateDashboard();
+      renderChart();
+    }
+
+    function addIncome() {
+      incomes.push({ name: "", amount: 0 });
+      renderAll();
+      updateSummary();
+      updateDashboard();
+      showNotification('Dodano nowy wpływ', 'success');
+    }
+    
+    function addFixedExpense() {
+      fixedExpenses.push({ name: "", amount: 0 });
+      renderAll();
+      updateSummary();
+      updateDashboard();
+      showNotification('Dodano nowy wydatek stały', 'success');
+    }
+    
+    function addSubscription() {
+      subscriptions.push({ name: "", amount: 0 });
+      renderAll();
+      updateSummary();
+      updateDashboard();
+      showNotification('Dodano nową subskrypcję', 'success');
+    }
+
+    function renderAdHocExpenses() {
+      const expenseList = document.getElementById("expenseList");
+      expenseList.innerHTML = "";
+      
+      adHocExpenses.forEach((exp, index) => {
+        const item = document.createElement("div");
+        item.className = "expense-item";
+        
+        const details = document.createElement("div");
+        details.className = "expense-item-details";
+        
+        const category = document.createElement("span");
+        category.className = "expense-item-category";
+        category.textContent = exp.category;
+        
+        const subcategory = document.createElement("span");
+        subcategory.className = "expense-item-subcategory";
+        subcategory.textContent = exp.subcategory ? ` (${exp.subcategory})` : '';
+        
+        const description = document.createElement("div");
+        description.textContent = exp.description || "Brak opisu";
+        
+        details.appendChild(category);
+        details.appendChild(subcategory);
+        details.appendChild(description);
+        
+        const amount = document.createElement("div");
+        amount.className = "expense-item-amount";
+        amount.textContent = `${exp.amount.toFixed(2)} PLN`;
+        
+        const actions = document.createElement("div");
+        actions.className = "expense-item-actions";
+        
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn btn-danger";
+        removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
+        removeBtn.onclick = () => {
+          adHocExpenses.splice(index, 1);
+          renderAdHocExpenses();
+          updateSummary();
+          updateDashboard();
+          renderChart();
+          showNotification('Wydatek został usunięty', 'success');
+        };
+        
+        actions.appendChild(removeBtn);
+        
+        item.appendChild(details);
+        item.appendChild(amount);
+        item.appendChild(actions);
+        
+        expenseList.appendChild(item);
+      });
+    }
+
+    function categoryChanged() {
+      const category = document.getElementById("expenseCategory").value;
+      const subcategoryGroup = document.getElementById("subcategoryGroup");
+      const subcategorySelect = document.getElementById("expenseSubcategory");
+
+      if (!category || !options[category]) {
+        subcategoryGroup.style.display = "none";
+        subcategorySelect.innerHTML = "";
+        return;
+      }
+
+      const subs = options[category];
+      subcategorySelect.innerHTML = '<option value="">-- Wybierz podkategorię --</option>';
+      subs.forEach(sub => {
+        const opt = document.createElement("option");
+        opt.value = sub;
+        opt.textContent = sub;
+        subcategorySelect.appendChild(opt);
+      });
+      subcategoryGroup.style.display = "block";
+    }
+
+    function addExpense() {
+      const category = document.getElementById("expenseCategory").value;
+      const subcategory = document.getElementById("expenseSubcategory").value;
+      const description = document.getElementById("expenseDesc").value.trim();
+      const amountStr = document.getElementById("expenseAmount").value;
+
+      if (!category) {
+        showNotification('Proszę wybrać kategorię', 'error');
+        return;
+      }
+      const amount = parseFloat(amountStr);
+      if (isNaN(amount) || amount <= 0) {
+        showNotification('Podaj poprawną kwotę wydatku', 'error');
+        return;
+      }
+
+      adHocExpenses.push({ category, subcategory, description, amount });
+      renderAdHocExpenses();
+      updateSummary();
+      updateDashboard();
+      renderChart();
+      showNotification('Dodano nowy wydatek', 'success');
+
+      // reset inputy
+      document.getElementById("expenseCategory").value = "";
+      document.getElementById("subcategoryGroup").style.display = "none";
+      document.getElementById("expenseSubcategory").innerHTML = "";
+      document.getElementById("expenseDesc").value = "";
+      document.getElementById("expenseAmount").value = "";
+    }
+
+    function setSavingsGoal() {
+      const goalInput = document.getElementById('savingsGoal');
+      const paymentDateInput = document.getElementById('paymentDate');
+      const monthStartInput = document.getElementById('monthStart');
+      
+      const goal = parseFloat(goalInput.value);
+      const payment = parseInt(paymentDateInput.value);
+      const startDate = monthStartInput.value;
+      
+      if (isNaN(goal) || goal < 0) {
+        showNotification('Podaj poprawną kwotę celu oszczędzania', 'error');
+        return;
+      }
+      
+      savingsGoal = goal;
+      paymentDate = payment || 0;
+      monthStart = startDate || null;
+      
+      updateSavingsInfo();
+      updateDashboard();
+      showNotification('Cel oszczędzania został ustawiony', 'success');
+    }
+
+    function clearSavingsGoal() {
+      savingsGoal = 0;
+      paymentDate = 0;
+      monthStart = null;
+      document.getElementById('savingsGoal').value = '';
+      document.getElementById('paymentDate').value = '';
+      document.getElementById('monthStart').value = '';
+      document.getElementById('savingsInfo').style.display = 'none';
+      updateDashboard();
+      showNotification('Cel oszczędzania został usunięty', 'success');
+    }
+
+    function updateSavingsInfo() {
+      if (savingsGoal <= 0) {
+        document.getElementById('savingsInfo').style.display = 'none';
+        return;
+      }
+      
+      const today = new Date();
+      let budgetStartDate, budgetEndDate;
+      
+      if (monthStart) {
+        budgetStartDate = new Date(monthStart);
+        budgetEndDate = new Date(budgetStartDate);
+        budgetEndDate.setMonth(budgetEndDate.getMonth() + 1);
+        budgetEndDate.setDate(budgetEndDate.getDate() - 1);
+      } else if (paymentDate > 0) {
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+        budgetStartDate = new Date(currentYear, currentMonth, paymentDate);
+        
+        if (today.getDate() < paymentDate) {
+          budgetStartDate.setMonth(budgetStartDate.getMonth() - 1);
+        }
+        
+        budgetEndDate = new Date(budgetStartDate);
+        budgetEndDate.setMonth(budgetEndDate.getMonth() + 1);
+        budgetEndDate.setDate(budgetEndDate.getDate() - 1);
+      } else {
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+        budgetStartDate = new Date(currentYear, currentMonth, 1);
+        budgetEndDate = new Date(currentYear, currentMonth + 1, 0);
+      }
+      
+      const totalDaysInPeriod = Math.ceil((budgetEndDate - budgetStartDate) / (1000 * 60 * 60 * 24)) + 1;
+      const remainingDays = Math.max(0, Math.ceil((budgetEndDate - today) / (1000 * 60 * 60 * 24)) + 1);
+      
+      const totalIncome = incomes.reduce((acc, i) => acc + i.amount, 0);
+      const totalFixed = fixedExpenses.reduce((acc, e) => acc + e.amount, 0);
+      const totalSubs = subscriptions.reduce((acc, s) => acc + s.amount, 0);
+      const totalAdHoc = adHocExpenses.reduce((acc, a) => acc + a.amount, 0);
+      
+      const availableForSavingsAndSpending = totalIncome - totalFixed - totalSubs;
+      const remainingAfterSavings = availableForSavingsAndSpending - savingsGoal;
+      
+      const spentThisMonth = totalAdHoc;
+      const remainingBudget = remainingAfterSavings - spentThisMonth;
+      const adjustedDailyLimit = remainingDays > 0 ? remainingBudget / remainingDays : 0;
+      
+      const formatDate = (date) => date.toLocaleDateString('pl-PL');
+      
+      document.getElementById('savingsGoalText').textContent = `Miesięczny cel oszczędzania: ${savingsGoal.toFixed(2)} PLN`;
+      document.getElementById('dailyLimitText').textContent = `Dzienny limit wydatków: ${Math.max(0, adjustedDailyLimit).toFixed(2)} PLN`;
+      document.getElementById('remainingDaysText').textContent = `Okres budżetowy: ${formatDate(budgetStartDate)} - ${formatDate(budgetEndDate)} (pozostało ${remainingDays} dni)`;
+      document.getElementById('currentProgressText').textContent = `Wydano w okresie: ${spentThisMonth.toFixed(2)} PLN | Pozostało do wydania: ${Math.max(0, remainingBudget).toFixed(2)} PLN`;
+      
+      document.getElementById('savingsInfo').style.display = 'block';
+    }
+
+    function getDailyLimit() {
+      if (savingsGoal <= 0) return 0;
+      
+      const today = new Date();
+      let budgetStartDate, budgetEndDate;
+      
+      if (monthStart) {
+        budgetStartDate = new Date(monthStart);
+        budgetEndDate = new Date(budgetStartDate);
+        budgetEndDate.setMonth(budgetEndDate.getMonth() + 1);
+        budgetEndDate.setDate(budgetEndDate.getDate() - 1);
+      } else if (paymentDate > 0) {
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+        budgetStartDate = new Date(currentYear, currentMonth, paymentDate);
+        
+        if (today.getDate() < paymentDate) {
+          budgetStartDate.setMonth(budgetStartDate.getMonth() - 1);
+        }
+        
+        budgetEndDate = new Date(budgetStartDate);
+        budgetEndDate.setMonth(budgetEndDate.getMonth() + 1);
+        budgetEndDate.setDate(budgetEndDate.getDate() - 1);
+      } else {
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+        budgetStartDate = new Date(currentYear, currentMonth, 1);
+        budgetEndDate = new Date(currentYear, currentMonth + 1, 0);
+      }
+      
+      const remainingDays = Math.max(0, Math.ceil((budgetEndDate - today) / (1000 * 60 * 60 * 24)) + 1);
+      
+      const totalIncome = incomes.reduce((acc, i) => acc + i.amount, 0);
+      const totalFixed = fixedExpenses.reduce((acc, e) => acc + e.amount, 0);
+      const totalSubs = subscriptions.reduce((acc, s) => acc + s.amount, 0);
+      const totalAdHoc = adHocExpenses.reduce((acc, a) => acc + a.amount, 0);
+      
+      const availableForSavingsAndSpending = totalIncome - totalFixed - totalSubs;
+      const remainingAfterSavings = availableForSavingsAndSpending - savingsGoal;
+      const remainingBudget = remainingAfterSavings - totalAdHoc;
+      
+      return remainingDays > 0 ? Math.max(0, remainingBudget / remainingDays) : 0;
+    }
+
+    function resetBin() {
+      if (confirm("Czy na pewno chcesz zresetować wszystkie dane?")) {
+        incomes = [];
+        fixedExpenses = [];
+        subscriptions = [];
+        adHocExpenses = [];
+        savingsGoal = 0;
+        paymentDate = 0;
+        monthStart = null;
+        document.getElementById('savingsGoal').value = '';
+        document.getElementById('paymentDate').value = '';
+        document.getElementById('monthStart').value = '';
+        document.getElementById('savingsInfo').style.display = 'none';
+        renderAll();
+        updateSummary();
+        updateDashboard();
+        renderChart();
+        showNotification('Wszystkie dane zostały zresetowane', 'success');
+      }
+    }
+
+    function updateSummary() {
+      const totalIncome = incomes.reduce((acc, i) => acc + i.amount, 0);
+      const totalFixed = fixedExpenses.reduce((acc, e) => acc + e.amount, 0);
+      const totalSubs = subscriptions.reduce((acc, s) => acc + s.amount, 0);
+      const totalAdHoc = adHocExpenses.reduce((acc, a) => acc + a.amount, 0);
+      const totalExpenses = totalFixed + totalSubs + totalAdHoc;
+      const balance = totalIncome - totalExpenses;
+
+      let summaryText = `Suma wpływów: ${totalIncome.toFixed(2)} PLN\n`;
+      summaryText += `Wydatki stałe: ${totalFixed.toFixed(2)} PLN\n`;
+      summaryText += `Subskrypcje: ${totalSubs.toFixed(2)} PLN\n`;
+      summaryText += `Wydatki ad hoc: ${totalAdHoc.toFixed(2)} PLN\n`;
+      summaryText += `----------------------------\n`;
+      summaryText += `Saldo: ${balance.toFixed(2)} PLN\n`;
+
+      // 🔽 Podsumowanie ad hoc: kategoria → podkategoria → suma
+      const grouped = {};
+
+      adHocExpenses.forEach(({ category, subcategory, amount }) => {
+        if (!grouped[category]) grouped[category] = {};
+        const sub = subcategory || "Brak podkategorii";
+        if (!grouped[category][sub]) grouped[category][sub] = 0;
+        grouped[category][sub] += amount;
+      });
+
+      if (Object.keys(grouped).length > 0) {
+        summaryText += `\n💡 Szczegóły wydatków ad hoc:\n`;
+        for (const category in grouped) {
+          summaryText += `\n📁 ${category}:\n`;
+          for (const sub in grouped[category]) {
+            summaryText += `   ➤ ${sub}: ${grouped[category][sub].toFixed(2)} PLN\n`;
+          }
+        }
+      }
+
+      document.getElementById("summaryText").textContent = summaryText;
+    }
+
+    function updateDashboard() {
+      const totalIncome = incomes.reduce((acc, i) => acc + i.amount, 0);
+      const totalFixed = fixedExpenses.reduce((acc, e) => acc + e.amount, 0);
+      const totalSubs = subscriptions.reduce((acc, s) => acc + s.amount, 0);
+      const totalAdHoc = adHocExpenses.reduce((acc, a) => acc + a.amount, 0);
+      const totalExpenses = totalFixed + totalSubs + totalAdHoc;
+      const balance = totalIncome - totalExpenses;
+      const dailyLimit = getDailyLimit();
+
+      document.getElementById("dashboardIncome").textContent = `${totalIncome.toFixed(2)} PLN`;
+      document.getElementById("dashboardExpenses").textContent = `${totalExpenses.toFixed(2)} PLN`;
+      document.getElementById("dashboardBalance").textContent = `${balance.toFixed(2)} PLN`;
+      document.getElementById("dashboardSavings").textContent = `${savingsGoal.toFixed(2)} PLN`;
+      document.getElementById("dashboardDailyLimit").textContent = `${dailyLimit.toFixed(2)} PLN`;
+
+      // Dodaj klasę pulse do salda jeśli jest ujemne
+      const balanceElement = document.getElementById("dashboardBalance");
+      if (balance < 0) {
+        balanceElement.classList.add("pulse");
+        balanceElement.style.color = "var(--danger)";
+      } else {
+        balanceElement.classList.remove("pulse");
+        balanceElement.style.color = "var(--success)";
+      }
+      
+      // Aktualizuj informacje o celu oszczędzania jeśli jest ustawiony
+      if (savingsGoal > 0) {
+        updateSavingsInfo();
+        document.getElementById('savingsGoal').value = savingsGoal;
+      }
+    }
+
+    function renderChart() {
+      const chartContainer = document.getElementById('chartContainer');
+      chartContainer.innerHTML = '';
+      
+      // Grupowanie wydatków według kategorii
+      const categoryTotals = {};
+      adHocExpenses.forEach(exp => {
+        if (!categoryTotals[exp.category]) categoryTotals[exp.category] = 0;
+        categoryTotals[exp.category] += exp.amount;
+      });
+      
+      // Znajdź maksymalną wartość dla skalowania wykresu
+      const maxValue = Math.max(...Object.values(categoryTotals), 1);
+      
+      // Szerokość słupka i odstęp
+      const barWidth = 40;
+      const barGap = 20;
+      const totalWidth = Object.keys(categoryTotals).length * (barWidth + barGap);
+      
+      // Centrowanie wykresu
+      const startX = (chartContainer.offsetWidth - totalWidth) / 2;
+      
+      // Tworzenie słupków
+      let index = 0;
+      for (const category in categoryTotals) {
+        const value = categoryTotals[category];
+        const height = (value / maxValue) * 250; // Maksymalna wysokość 250px
+        
+        const bar = document.createElement('div');
+        bar.className = 'chart-bar';
+        bar.style.height = `${height}px`;
+        bar.style.left = `${startX + index * (barWidth + barGap)}px`;
+        
+        // Tooltip z wartością
+        bar.addEventListener('mouseenter', (e) => {
+          const tooltip = document.createElement('div');
+          tooltip.className = 'tooltip';
+          tooltip.textContent = `${category}: ${value.toFixed(2)} PLN`;
+          tooltip.style.left = `${e.pageX}px`;
+          tooltip.style.top = `${e.pageY - 30}px`;
+          tooltip.style.opacity = '1';
+          document.body.appendChild(tooltip);
+          
+          bar.addEventListener('mouseleave', () => {
+            tooltip.remove();
+          });
+        });
+        
+        const label = document.createElement('div');
+        label.className = 'chart-label';
+        label.textContent = category;
+        label.style.left = `${startX + index * (barWidth + barGap)}px`;
+        
+        chartContainer.appendChild(bar);
+        chartContainer.appendChild(label);
+        
+        index++;
+      }
+    }
+
+    function showNotification(message, type) {
+      const notification = document.getElementById('notification');
+      const notificationMessage = document.getElementById('notificationMessage');
+      
+      notification.className = `notification ${type}`;
+      notificationMessage.textContent = message;
+      
+      notification.classList.add('show');
+      
+      // Automatyczne ukrycie po 3 sekundach
+      setTimeout(() => {
+        hideNotification();
+      }, 3000);
+    }
+
+    function hideNotification() {
+      const notification = document.getElementById('notification');
+      notification.classList.remove('show');
+    }
+
+    async function saveData() {
+      const data = {
+        incomes,
+        fixedExpenses,
+        subscriptions,
+        adHocExpenses,
+        savingsGoal,
+        paymentDate,
+        monthStart
+      };
+
+      try {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": masterKey,
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          showNotification('Dane zostały zapisane pomyślnie!', 'success');
+        } else {
+          showNotification('Błąd podczas zapisu danych.', 'error');
+        }
+      } catch (error) {
+        showNotification(`Błąd połączenia: ${error}`, 'error');
+      }
+    }
+
+    async function loadData() {
+      try {
+        const response = await fetch(apiUrl, {
+          headers: {
+            "X-Master-Key": masterKey,
+          }
+        });
+        if (!response.ok) throw new Error(`Błąd sieci: ${response.status}`);
+
+        const json = await response.json();
+        if (json && json.record) {
+          incomes = json.record.incomes || [];
+          fixedExpenses = json.record.fixedExpenses || [];
+          subscriptions = json.record.subscriptions || [];
+          adHocExpenses = json.record.adHocExpenses || [];
+          savingsGoal = json.record.savingsGoal || 0;
+          paymentDate = json.record.paymentDate || 0;
+          monthStart = json.record.monthStart || null;
+          
+          // Aktualizuj pola formularza
+          if (paymentDate > 0) {
+            document.getElementById('paymentDate').value = paymentDate;
+          }
+          if (monthStart) {
+            document.getElementById('monthStart').value = monthStart;
+          }
+        }
+      } catch (err) {
+        console.warn("Nie udało się wczytać danych:", err);
+      } finally {
+        renderAll();
+      }
+    }
+
+    // Ładujemy dane przy starcie strony
+    window.onload = loadData;
+  </script>
+</body>
+</html>
